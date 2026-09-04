@@ -1,1199 +1,1682 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
-
-<title>FinAI — Finance AI Assistant</title>
-
-<style>
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-:root {
-
-  --bg: #f7f8fc;
-  --sidebar: #ffffff;
-  --card: #ffffff;
-  --text: #172033;
-  --muted: #718096;
-  --border: #e5e7eb;
-
-  --accent: #2563eb;
-  --accent-dark: #1d4ed8;
-
-  --user: #2563eb;
-  --ai: #ffffff;
-
-  --input: #ffffff;
-
-}
-
-body.dark {
-
-  --bg: #0f172a;
-  --sidebar: #111827;
-  --card: #1e293b;
-
-  --text: #f8fafc;
-  --muted: #94a3b8;
-  --border: #334155;
-
-  --accent: #3b82f6;
-  --accent-dark: #2563eb;
-
-  --user: #2563eb;
-  --ai: #1e293b;
-  --input: #1e293b;
-
-}
-
-html,
-body {
-
-  width: 100%;
-  height: 100%;
-
-}
-
-body {
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Arial,
-    sans-serif;
-
-  background: var(--bg);
-  color: var(--text);
-
-  overflow: hidden;
-
-}
-
-button,
-textarea {
-
-  font-family: inherit;
-
-}
-
-/* APP */
-
-.app {
-
-  display: flex;
-  height: 100vh;
-  width: 100%;
-
-}
-
-/* SIDEBAR */
-
-.sidebar {
-
-  width: 270px;
-
-  background: var(--sidebar);
-
-  border-right:
-    1px solid var(--border);
-
-  display: flex;
-  flex-direction: column;
-
-  padding: 18px;
-
-  transition:
-    left 0.25s ease;
-
-}
-
-.brand {
-
-  display: flex;
-  align-items: center;
-
-  gap: 12px;
-
-  margin-bottom: 25px;
-
-}
-
-.logo {
-
-  width: 42px;
-  height: 42px;
-
-  border-radius: 12px;
-
-  background: var(--accent);
-
-  color: white;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-weight: 800;
-  font-size: 18px;
-
-}
-
-.brand-name {
-
-  font-size: 21px;
-  font-weight: 750;
-
-}
-
-.brand-subtitle {
-
-  font-size: 11px;
-
-  color: var(--muted);
-
-  margin-top: 2px;
-
-}
-
-.new-chat {
-
-  width: 100%;
-
-  padding: 13px;
-
-  border:
-    1px solid var(--border);
-
-  background: var(--card);
-
-  color: var(--text);
-
-  border-radius: 12px;
-
-  cursor: pointer;
-
-  font-size: 14px;
-
-  font-weight: 600;
-
-  margin-bottom: 25px;
-
-  text-align: left;
-
-}
-
-.new-chat:hover {
-
-  background: var(--bg);
-
-}
-
-.section-title {
-
-  color: var(--muted);
-
-  font-size: 11px;
-
-  font-weight: 700;
-
-  text-transform: uppercase;
-
-  letter-spacing: 0.7px;
-
-  margin-bottom: 10px;
-
-}
-
-.recent {
-
-  flex: 1;
-
-  overflow-y: auto;
-
-}
-
-.recent-item {
-
-  padding: 10px 12px;
-
-  border-radius: 9px;
-
-  font-size: 13px;
-
-  color: var(--muted);
-
-  cursor: pointer;
-
-  margin-bottom: 3px;
-
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-}
-
-.recent-item:hover {
-
-  background: var(--bg);
-
-  color: var(--text);
-
-}
-
-.sidebar-bottom {
-
-  border-top:
-    1px solid var(--border);
-
-  padding-top: 15px;
-
-}
-
-.theme-button {
-
-  width: 100%;
-
-  padding: 11px;
-
-  border: none;
-
-  background: transparent;
-
-  color: var(--muted);
-
-  text-align: left;
-
-  cursor: pointer;
-
-  border-radius: 9px;
-
-}
-
-.theme-button:hover {
-
-  background: var(--bg);
-
-  color: var(--text);
-
-}
-
-/* MAIN */
-
-.main {
-
-  flex: 1;
-
-  display: flex;
-
-  flex-direction: column;
-
-  min-width: 0;
-
-}
-
-.topbar {
-
-  height: 65px;
-
-  background: var(--sidebar);
-
-  border-bottom:
-    1px solid var(--border);
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  padding: 0 25px;
-
-}
-
-.mobile-menu {
-
-  display: none;
-
-  border: none;
-
-  background: transparent;
-
-  font-size: 23px;
-
-  cursor: pointer;
-
-  color: var(--text);
-
-  margin-right: 10px;
-
-}
-
-.top-title {
-
-  font-size: 16px;
-
-  font-weight: 650;
-
-}
-
-.status {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 7px;
-
-  font-size: 12px;
-
-  color: var(--muted);
-
-}
-
-.status-dot {
-
-  width: 7px;
-  height: 7px;
-
-  background: #22c55e;
-
-  border-radius: 50%;
-
-}
-
-/* CHAT */
-
-#chat {
-
-  flex: 1;
-
-  overflow-y: auto;
-
-  padding:
-    35px 20px 140px;
-
-  scroll-behavior: smooth;
-
-}
-
-.welcome {
-
-  max-width: 850px;
-
-  margin:
-    9vh auto 0;
-
-  text-align: center;
-
-}
-
-.welcome-logo {
-
-  width: 72px;
-  height: 72px;
-
-  margin:
-    0 auto 25px;
-
-  border-radius: 22px;
-
-  background: var(--accent);
-
-  color: white;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  font-size: 29px;
-
-  font-weight: 800;
-
-}
-
-.welcome h1 {
-
-  font-size: 38px;
-
-  margin-bottom: 12px;
-
-  letter-spacing: -1px;
-
-}
-
-.welcome p {
-
-  color: var(--muted);
-
-  font-size: 16px;
-
-  margin-bottom: 35px;
-
-}
-
-.suggestions {
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(2, 1fr);
-
-  gap: 12px;
-
-  max-width: 650px;
-
-  margin: auto;
-
-}
-
-.suggestion {
-
-  background: var(--card);
-
-  border:
-    1px solid var(--border);
-
-  padding: 16px;
-
-  border-radius: 13px;
-
-  text-align: left;
-
-  cursor: pointer;
-
-  color: var(--text);
-
-  transition: 0.2s;
-
-}
-
-.suggestion:hover {
-
-  border-color: var(--accent);
-
-  transform: translateY(-1px);
-
-}
-
-.suggestion-title {
-
-  font-weight: 650;
-
-  font-size: 14px;
-
-  margin-bottom: 5px;
-
-}
-
-.suggestion-text {
-
-  font-size: 12px;
-
-  color: var(--muted);
-
-}
-
-/* MESSAGE */
-
-.message-row {
-
-  max-width: 850px;
-
-  margin:
-    0 auto 22px;
-
-  display: flex;
-
-  gap: 12px;
-
-}
-
-.avatar {
-
-  min-width: 34px;
-
-  width: 34px;
-  height: 34px;
-
-  border-radius: 10px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  font-size: 11px;
-
-  font-weight: 700;
-
-}
-
-.user-avatar {
-
-  background: var(--accent);
-
-  color: white;
-
-}
-
-.ai-avatar {
-
-  background: #0f172a;
-
-  color: white;
-
-}
-
-body.dark .ai-avatar {
-
-  background: #475569;
-
-}
-
-.message-content {
-
-  flex: 1;
-
-  min-width: 0;
-
-}
-
-.message-name {
-
-  font-size: 12px;
-
-  color: var(--muted);
-
-  margin-bottom: 5px;
-
-  font-weight: 600;
-
-}
-
-.message-text {
-
-  background: var(--ai);
-
-  border:
-    1px solid var(--border);
-
-  border-radius:
-    4px 13px 13px 13px;
-
-  padding:
-    14px 16px;
-
-  line-height: 1.65;
-
-  font-size: 14px;
-
-  white-space: pre-wrap;
-
-  word-wrap: break-word;
-
-}
-
-.user-row .message-text {
-
-  background: var(--user);
-
-  color: white;
-
-  border: none;
-
-  border-radius:
-    13px 4px 13px 13px;
-
-}
-
-.message-actions {
-
-  display: flex;
-
-  gap: 12px;
-
-  margin-top: 7px;
-
-}
-
-.action-button {
-
-  border: none;
-
-  background: transparent;
-
-  color: var(--muted);
-
-  cursor: pointer;
-
-  font-size: 11px;
-
-}
-
-.action-button:hover {
-
-  color: var(--text);
-
-}
-
-/* TYPING */
-
-.typing {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 4px;
-
-  height: 20px;
-
-}
-
-.typing span {
-
-  width: 6px;
-  height: 6px;
-
-  border-radius: 50%;
-
-  background: var(--muted);
-
-  animation:
-    typing 1.2s infinite;
-
-}
-
-.typing span:nth-child(2) {
-
-  animation-delay: 0.15s;
-
-}
-
-.typing span:nth-child(3) {
-
-  animation-delay: 0.3s;
-
-}
-
-@keyframes typing {
-
-  0%,
-  60%,
-  100% {
-
-    opacity: 0.3;
-    transform: translateY(0);
-
-  }
-
-  30% {
-
-    opacity: 1;
-    transform: translateY(-3px);
-
-  }
-
-}
-
-/* INPUT */
-
-.input-wrapper {
-
-  position: fixed;
-
-  bottom: 0;
-
-  left: 270px;
-
-  right: 0;
-
-  padding:
-    15px 20px 20px;
-
-  background:
-    linear-gradient(
-      transparent,
-      var(--bg) 25%
-    );
-
-}
-
-.input-area {
-
-  max-width: 850px;
-
-  margin: auto;
-
-  background: var(--input);
-
-  border:
-    1px solid var(--border);
-
-  border-radius: 17px;
-
-  display: flex;
-
-  align-items: flex-end;
-
-  padding: 8px;
-
-  box-shadow:
-    0 8px 30px
-    rgba(0,0,0,0.08);
-
-}
-
-#message {
-
-  flex: 1;
-
-  border: none;
-
-  outline: none;
-
-  resize: none;
-
-  background: transparent;
-
-  color: var(--text);
-
-  font-size: 14px;
-
-  padding:
-    11px 12px;
-
-  min-height: 43px;
-
-  max-height: 130px;
-
-}
-
-#message::placeholder {
-
-  color: var(--muted);
-
-}
-
-#sendButton {
-
-  width: 43px;
-  height: 43px;
-
-  border: none;
-
-  border-radius: 12px;
-
-  background: var(--accent);
-
-  color: white;
-
-  cursor: pointer;
-
-  font-size: 18px;
-
-}
-
-#sendButton:hover {
-
-  background: var(--accent-dark);
-
-}
-
-#sendButton.stop {
-
-  background: #ef4444;
-
-}
-
-.disclaimer {
-
-  max-width: 850px;
-
-  margin:
-    7px auto 0;
-
-  text-align: center;
-
-  color: var(--muted);
-
-  font-size: 10px;
-
-}
-
-/* MOBILE */
-
-@media (max-width: 750px) {
-
-  .sidebar {
-
-    position: fixed;
-
-    left: -280px;
-
-    top: 0;
-    bottom: 0;
-
-    z-index: 100;
-
-    box-shadow:
-      10px 0 30px
-      rgba(0,0,0,0.15);
-
-  }
-
-  .sidebar.open {
-
-    left: 0;
-
-  }
-
-  .mobile-menu {
-
-    display: block;
-
-  }
-
-  .input-wrapper {
-
-    left: 0;
-
-  }
-
-  .topbar {
-
-    padding:
-      0 15px;
-
-  }
-
-  #chat {
-
-    padding:
-      25px 12px 140px;
-
-  }
-
-  .welcome {
-
-    margin-top: 7vh;
-
-  }
-
-  .welcome h1 {
-
-    font-size: 29px;
-
-  }
-
-  .suggestions {
-
-    grid-template-columns: 1fr;
-
-  }
-
-  .message-row {
-
-    gap: 8px;
-
-  }
-
-}
-
-</style>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+
+  <title>FinAI v3 — Finance AI Assistant</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --panel2: #f8fafc;
+      --border: #e5e7eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent2: #1d4ed8;
+      --user: #2563eb;
+      --ai: #ffffff;
+      --danger: #dc2626;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    body.dark {
+      --bg: #0b1120;
+      --panel: #111827;
+      --panel2: #172033;
+      --border: #263244;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent2: #60a5fa;
+      --ai: #111827;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    button,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =========================
+       APP
+    ========================== */
+
+    .app {
+      display: flex;
+      height: 100vh;
+      width: 100%;
+    }
+
+    /* =========================
+       SIDEBAR
+    ========================== */
+
+    .sidebar {
+      width: 270px;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 18px;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 8px 6px 22px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 19px;
+      font-weight: 800;
+      box-shadow: 0 7px 18px rgba(37, 99, 235, .25);
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    .brand-version {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .new-chat {
+      border: none;
+      background: var(--accent);
+      color: white;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      transition: .2s;
+      margin-bottom: 20px;
+    }
+
+    .new-chat:hover {
+      background: var(--accent2);
+      transform: translateY(-1px);
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin: 4px 7px 8px;
+    }
+
+    .chat-history {
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      padding: 10px 9px;
+      border-radius: 8px;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+
+    .history-item:hover {
+      background: var(--panel2);
+    }
+
+    .history-icon {
+      opacity: .65;
+      flex-shrink: 0;
+    }
+
+    .history-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      margin-top: 12px;
+    }
+
+    .theme-btn {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      color: var(--text);
+      padding: 10px;
+      border-radius: 9px;
+    }
+
+    /* =========================
+       MAIN
+    ========================== */
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .topbar {
+      height: 64px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+
+    .assistant-title {
+      font-weight: 750;
+      font-size: 15px;
+    }
+
+    .online {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #16a34a;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .online-dot {
+      width: 7px;
+      height: 7px;
+      background: #22c55e;
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, .12);
+    }
+
+    /* =========================
+       CHAT
+    ========================== */
+
+    .chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px 20px 170px;
+      scroll-behavior: auto;
+    }
+
+    .chat-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* =========================
+       WELCOME
+    ========================== */
+
+    .welcome {
+      max-width: 800px;
+      margin: 7vh auto 0;
+      text-align: center;
+    }
+
+    .welcome-logo {
+      width: 66px;
+      height: 66px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 850;
+      margin: 0 auto 20px;
+      box-shadow: 0 12px 30px rgba(37, 99, 235, .2);
+    }
+
+    .welcome h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      letter-spacing: -1.5px;
+      margin-bottom: 10px;
+    }
+
+    .welcome p {
+      color: var(--muted);
+      max-width: 650px;
+      margin: auto;
+      line-height: 1.6;
+    }
+
+    .suggestions {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      text-align: left;
+    }
+
+    .suggestion {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      padding: 15px;
+      border-radius: 12px;
+      transition: .2s;
+    }
+
+    .suggestion:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+    }
+
+    .suggestion-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .suggestion-text {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    /* =========================
+       MESSAGES
+    ========================== */
+
+    .message {
+      display: flex;
+      gap: 12px;
+      margin: 0 auto 25px;
+      max-width: 900px;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .avatar.ai {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+    }
+
+    .avatar.user {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .message-content {
+      max-width: min(760px, 85%);
+      min-width: 0;
+    }
+
+    .message.user .message-content {
+      background: var(--user);
+      color: white;
+      border-radius: 16px 16px 4px 16px;
+      padding: 12px 15px;
+    }
+
+    .message.ai .message-content {
+      background: var(--ai);
+      border: 1px solid var(--border);
+      border-radius: 4px 16px 16px 16px;
+      padding: 13px 15px;
+      box-shadow: 0 3px 12px rgba(15, 23, 42, .035);
+    }
+
+    .message-text {
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .message-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .action-btn {
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      color: var(--muted);
+      border-radius: 7px;
+      padding: 5px 8px;
+      font-size: 11px;
+    }
+
+    .action-btn:hover {
+      color: var(--text);
+    }
+
+    /* =========================
+       TYPING
+    ========================== */
+
+    .typing {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      min-height: 20px;
+    }
+
+    .typing span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: bounce 1s infinite ease-in-out;
+    }
+
+    .typing span:nth-child(2) {
+      animation-delay: .15s;
+    }
+
+    .typing span:nth-child(3) {
+      animation-delay: .3s;
+    }
+
+    @keyframes bounce {
+      0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: .4;
+      }
+      30% {
+        transform: translateY(-4px);
+        opacity: 1;
+      }
+    }
+
+    /* =========================
+       COMPOSER
+    ========================== */
+
+    .composer-wrap {
+      position: fixed;
+      bottom: 0;
+      left: 270px;
+      right: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        var(--bg) 25%
+      );
+      padding: 35px 20px 18px;
+      z-index: 10;
+    }
+
+    .composer {
+      max-width: 900px;
+      margin: auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 9px;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    #messageInput {
+      flex: 1;
+      resize: none;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      min-height: 44px;
+      max-height: 160px;
+      padding: 12px 10px;
+      line-height: 1.5;
+    }
+
+    #messageInput::placeholder {
+      color: var(--muted);
+    }
+
+    .send-btn,
+    .stop-btn {
+      width: 43px;
+      height: 43px;
+      border: none;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .send-btn {
+      background: var(--accent);
+    }
+
+    .send-btn:hover {
+      background: var(--accent2);
+    }
+
+    .stop-btn {
+      background: var(--danger);
+    }
+
+    .composer-note {
+      max-width: 900px;
+      margin: 8px auto 0;
+      text-align: center;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* =========================
+       ERROR
+    ========================== */
+
+    .error-box {
+      color: var(--danger);
+      line-height: 1.55;
+    }
+
+    .retry-btn {
+      margin-top: 9px;
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 7px;
+      font-size: 12px;
+    }
+
+    /* =========================
+       MOBILE
+    ========================== */
+
+    .mobile-menu {
+      display: none;
+    }
+
+    @media (max-width: 760px) {
+      .sidebar {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: block;
+        border: none;
+        background: transparent;
+        color: var(--text);
+        font-size: 21px;
+        margin-right: 10px;
+      }
+
+      .topbar {
+        padding: 0 14px;
+      }
+
+      .composer-wrap {
+        left: 0;
+        padding: 25px 10px 12px;
+      }
+
+      .chat {
+        padding: 20px 12px 150px;
+      }
+
+      .suggestions {
+        grid-template-columns: 1fr;
+      }
+
+      .welcome {
+        margin-top: 5vh;
+      }
+
+      .welcome h1 {
+        font-size: 30px;
+      }
+
+      .message-content {
+        max-width: 88%;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="app">
 
-<!-- SIDEBAR -->
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
 
-<aside
-  class="sidebar"
-  id="sidebar"
->
+    <div class="brand">
+      <div class="logo">F</div>
 
-  <div class="brand">
-
-    <div class="logo">
-      F
-    </div>
-
-    <div>
-
-      <div class="brand-name">
-        FinAI
+      <div>
+        <div class="brand-title">FinAI</div>
+        <div class="brand-version">Finance Intelligence · v3</div>
       </div>
-
-      <div class="brand-subtitle">
-        Intelligent Finance Assistant
-      </div>
-
     </div>
 
-  </div>
-
-  <button
-    class="new-chat"
-    onclick="newChat()"
-  >
-    ＋ &nbsp; New Chat
-  </button>
-
-  <div class="section-title">
-    Recent Chats
-  </div>
-
-  <div
-    class="recent"
-    id="recentChats"
-  >
-    <div class="recent-item">
-      No recent conversations
-    </div>
-  </div>
-
-  <div class="sidebar-bottom">
-
-    <button
-      class="theme-button"
-      onclick="toggleTheme()"
-    >
-      ◐ &nbsp; Change appearance
+    <button class="new-chat" id="newChatBtn">
+      ＋ New Chat
     </button>
 
-  </div>
+    <div class="section-title">
+      Recent Chats
+    </div>
 
-</aside>
+    <div class="chat-history" id="chatHistory"></div>
 
-
-<!-- MAIN -->
-
-<main class="main">
-
-  <div class="topbar">
-
-    <div
-      style="
-        display:flex;
-        align-items:center;
-      "
-    >
-
-      <button
-        class="mobile-menu"
-        onclick="toggleSidebar()"
-      >
-        ☰
+    <div class="sidebar-bottom">
+      <button class="theme-btn" id="themeBtn">
+        ☾ Dark Mode
       </button>
-
-      <div class="top-title">
-        FinAI Assistant
-      </div>
-
     </div>
 
-    <div class="status">
+  </aside>
 
-      <span class="status-dot"></span>
+  <!-- MAIN -->
+  <main class="main">
 
-      AI Online
+    <header class="topbar">
 
-    </div>
+      <div style="display:flex;align-items:center;">
+        <button class="mobile-menu" id="mobileNewChat">☰</button>
 
-  </div>
-
-
-  <div id="chat">
-
-    <div
-      class="welcome"
-      id="welcome"
-    >
-
-      <div class="welcome-logo">
-        F
+        <div class="assistant-title">
+          FinAI Assistant
+        </div>
       </div>
 
-      <h1>
-        Welcome to FinAI
-      </h1>
+      <div class="online">
+        <span class="online-dot"></span>
+        AI Online
+      </div>
 
-      <p>
-        Your intelligent assistant for finance,
-        contracts, GST, audit and more.
-      </p>
+    </header>
 
-      <div class="suggestions">
+    <!-- CHAT -->
+    <section class="chat" id="chat">
 
-        <div
-          class="suggestion"
-          onclick="
-            useSuggestion(
-              'Explain FIDIC Clause 13 in simple language.'
-            )
-          "
-        >
+      <div class="chat-inner" id="chatInner">
 
-          <div class="suggestion-title">
-            📑 Contract Analysis
+        <div class="welcome" id="welcome">
+
+          <div class="welcome-logo">
+            F
           </div>
 
-          <div class="suggestion-text">
-            Explain FIDIC Clause 13 in simple language.
-          </div>
+          <h1>
+            Finance, Contracts & Tax — Simplified.
+          </h1>
 
-        </div>
+          <p>
+            FinAI helps you analyse finance matters, GST, audit observations,
+            FIDIC contracts, claims, variations, bank guarantees and draft
+            professional official communications.
+          </p>
 
+          <div class="suggestions">
 
-        <div
-          class="suggestion"
-          onclick="
-            useSuggestion(
-              'Explain the difference between GSTR-2A and GSTR-2B.'
-            )
-          "
-        >
+            <button class="suggestion" data-prompt="Explain FIDIC Clause 13 on Variations in simple but professional language, including how variation valuation works.">
+              <div class="suggestion-title">
+                📑 FIDIC & Contracts
+              </div>
+              <div class="suggestion-text">
+                Explain FIDIC Clause 13 and variation valuation.
+              </div>
+            </button>
 
-          <div class="suggestion-title">
-            🧾 GST Assistance
-          </div>
+            <button class="suggestion" data-prompt="Explain the difference between GSTR-2A and GSTR-2B from an accounts and ITC reconciliation point of view.">
+              <div class="suggestion-title">
+                🧾 GST
+              </div>
+              <div class="suggestion-text">
+                Compare GSTR-2A and GSTR-2B.
+              </div>
+            </button>
 
-          <div class="suggestion-text">
-            Understand GST provisions and reconciliations.
-          </div>
+            <button class="suggestion" data-prompt="Analyse the following situation from an audit and CAG point of view. Explain the possible audit objection, risk and suitable management response.">
+              <div class="suggestion-title">
+                🔍 Audit Analysis
+              </div>
+              <div class="suggestion-text">
+                Analyse an issue from an audit perspective.
+              </div>
+            </button>
 
-        </div>
+            <button class="suggestion" data-prompt="Draft a professional finance note suitable for submission to senior management. Include facts, financial implications, applicable provisions, justification and recommendation.">
+              <div class="suggestion-title">
+                ✍️ Finance Note
+              </div>
+              <div class="suggestion-text">
+                Draft a professional finance note.
+              </div>
+            </button>
 
-
-        <div
-          class="suggestion"
-          onclick="
-            useSuggestion(
-              'Analyse this situation from an audit point of view.'
-            )
-          "
-        >
-
-          <div class="suggestion-title">
-            🔍 Audit Analysis
-          </div>
-
-          <div class="suggestion-text">
-            Examine issues from an audit perspective.
-          </div>
-
-        </div>
-
-
-        <div
-          class="suggestion"
-          onclick="
-            useSuggestion(
-              'Help me draft a professional finance note.'
-            )
-          "
-        >
-
-          <div class="suggestion-title">
-            ✍️ Professional Drafting
-          </div>
-
-          <div class="suggestion-text">
-            Draft clear professional finance communications.
           </div>
 
         </div>
 
       </div>
 
-    </div>
+    </section>
 
-  </div>
-
-</main>
+  </main>
 
 </div>
 
+<!-- COMPOSER -->
+<div class="composer-wrap">
 
-<!-- INPUT -->
-
-<div class="input-wrapper">
-
-  <div class="input-area">
+  <div class="composer">
 
     <textarea
-      id="message"
-      placeholder="Ask FinAI anything..."
+      id="messageInput"
       rows="1"
+      placeholder="Ask FinAI about finance, GST, audit, FIDIC, contracts..."
+      autocomplete="off"
     ></textarea>
 
     <button
-      id="sendButton"
-      onclick="sendMessage()"
+      class="send-btn"
+      id="sendBtn"
       title="Send"
+      aria-label="Send"
     >
       ➤
     </button>
 
   </div>
 
-  <div class="disclaimer">
-
-    FinAI can make mistakes.
-    Verify important financial,
-    legal and contractual information.
-
+  <div class="composer-note">
+    FinAI can make mistakes. Verify critical legal, tax and financial matters.
   </div>
 
 </div>
 
 
 <script>
+/* =========================================================
+   FINAI v3 FRONTEND
+========================================================= */
 
-/* ELEMENTS */
+const input = document.getElementById("messageInput");
+const sendBtn = document.getElementById("sendBtn");
+const chat = document.getElementById("chat");
+const chatInner = document.getElementById("chatInner");
+const welcome = document.getElementById("welcome");
+const newChatBtn = document.getElementById("newChatBtn");
+const mobileNewChat = document.getElementById("mobileNewChat");
+const chatHistory = document.getElementById("chatHistory");
+const themeBtn = document.getElementById("themeBtn");
 
-const input =
-  document.getElementById("message");
-
-const sendButton =
-  document.getElementById("sendButton");
-
-const chat =
-  document.getElementById("chat");
-
-
-/* CONVERSATION */
-
-let messages = [];
-
+let conversation = [];
+let isGenerating = false;
 let controller = null;
+let currentRetryText = "";
 
 
-/* ENTER */
+/* =========================================================
+   STORAGE
+========================================================= */
+
+const STORAGE_KEY = "finai_v3_conversation";
+const HISTORY_KEY = "finai_v3_history";
+const THEME_KEY = "finai_v3_theme";
+
+
+function saveConversation() {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(conversation)
+    );
+  } catch (e) {
+    console.warn("Could not save conversation:", e);
+  }
+}
+
+
+function loadConversation() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (!saved) return;
+
+    const parsed = JSON.parse(saved);
+
+    if (!Array.isArray(parsed)) return;
+
+    conversation = parsed;
+
+    if (conversation.length > 0) {
+      welcome.style.display = "none";
+
+      for (const message of conversation) {
+        renderStoredMessage(message);
+      }
+    }
+
+  } catch (e) {
+    console.warn("Could not load conversation:", e);
+  }
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+function saveHistory() {
+  try {
+    let history = JSON.parse(
+      localStorage.getItem(HISTORY_KEY) || "[]"
+    );
+
+    const firstUserMessage = conversation.find(
+      m => m.role === "user"
+    );
+
+    if (!firstUserMessage) return;
+
+    const title = firstUserMessage.content
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 70);
+
+    history = history.filter(
+      item => item.id !== currentChatId
+    );
+
+    history.unshift({
+      id: currentChatId,
+      title,
+      conversation,
+      date: Date.now()
+    });
+
+    history = history.slice(0, 20);
+
+    localStorage.setItem(
+      HISTORY_KEY,
+      JSON.stringify(history)
+    );
+
+    renderHistory();
+
+  } catch (e) {
+    console.warn("Could not save history:", e);
+  }
+}
+
+
+let currentChatId =
+  Date.now().toString() +
+  Math.random().toString(36).slice(2);
+
+
+function renderHistory() {
+
+  chatHistory.innerHTML = "";
+
+  let history = [];
+
+  try {
+    history = JSON.parse(
+      localStorage.getItem(HISTORY_KEY) || "[]"
+    );
+  } catch {
+    history = [];
+  }
+
+  for (const item of history) {
+
+    const button = document.createElement("button");
+
+    button.className = "history-item";
+
+    button.innerHTML = `
+      <span class="history-icon">💬</span>
+      <span class="history-title"></span>
+    `;
+
+    button.querySelector(".history-title").textContent =
+      item.title || "New conversation";
+
+    button.addEventListener("click", () => {
+      loadHistoryItem(item);
+    });
+
+    chatHistory.appendChild(button);
+  }
+}
+
+
+function loadHistoryItem(item) {
+
+  if (isGenerating) {
+    stopGeneration();
+  }
+
+  conversation = Array.isArray(item.conversation)
+    ? item.conversation
+    : [];
+
+  currentChatId = item.id;
+
+  chatInner.innerHTML = "";
+
+  if (conversation.length === 0) {
+    createWelcome();
+    return;
+  }
+
+  for (const message of conversation) {
+    renderStoredMessage(message);
+  }
+
+  saveConversation();
+
+  scrollToBottom();
+}
+
+
+/* =========================================================
+   WELCOME
+========================================================= */
+
+function createWelcome() {
+
+  chatInner.innerHTML = `
+    <div class="welcome" id="welcome">
+      <div class="welcome-logo">F</div>
+
+      <h1>
+        Finance, Contracts & Tax — Simplified.
+      </h1>
+
+      <p>
+        FinAI helps you analyse finance matters, GST, audit observations,
+        FIDIC contracts, claims, variations, bank guarantees and draft
+        professional official communications.
+      </p>
+
+      <div class="suggestions">
+
+        <button class="suggestion"
+          data-prompt="Explain FIDIC Clause 13 on Variations in simple but professional language, including how variation valuation works.">
+          <div class="suggestion-title">📑 FIDIC & Contracts</div>
+          <div class="suggestion-text">
+            Explain FIDIC Clause 13 and variation valuation.
+          </div>
+        </button>
+
+        <button class="suggestion"
+          data-prompt="Explain the difference between GSTR-2A and GSTR-2B from an accounts and ITC reconciliation point of view.">
+          <div class="suggestion-title">🧾 GST</div>
+          <div class="suggestion-text">
+            Compare GSTR-2A and GSTR-2B.
+          </div>
+        </button>
+
+        <button class="suggestion"
+          data-prompt="Analyse the following situation from an audit and CAG point of view. Explain the possible audit objection, risk and suitable management response.">
+          <div class="suggestion-title">🔍 Audit Analysis</div>
+          <div class="suggestion-text">
+            Analyse an issue from an audit perspective.
+          </div>
+        </button>
+
+        <button class="suggestion"
+          data-prompt="Draft a professional finance note suitable for submission to senior management. Include facts, financial implications, applicable provisions, justification and recommendation.">
+          <div class="suggestion-title">✍️ Finance Note</div>
+          <div class="suggestion-text">
+            Draft a professional finance note.
+          </div>
+        </button>
+
+      </div>
+    </div>
+  `;
+
+  document
+    .querySelectorAll(".suggestion")
+    .forEach(button => {
+      button.addEventListener("click", () => {
+        input.value = button.dataset.prompt;
+        autoResize();
+        input.focus();
+      });
+    });
+}
+
+
+/* =========================================================
+   RENDER STORED MESSAGE
+========================================================= */
+
+function renderStoredMessage(message) {
+
+  const row = document.createElement("div");
+
+  row.className =
+    "message " +
+    (message.role === "user" ? "user" : "ai");
+
+  const avatar = document.createElement("div");
+
+  avatar.className =
+    "avatar " +
+    (message.role === "user" ? "user" : "ai");
+
+  avatar.textContent =
+    message.role === "user" ? "You" : "F";
+
+  const content = document.createElement("div");
+
+  content.className = "message-content";
+
+  const text = document.createElement("div");
+
+  text.className = "message-text";
+  text.textContent = message.content || "";
+
+  content.appendChild(text);
+
+  if (message.role === "assistant") {
+
+    const actions = document.createElement("div");
+
+    actions.className = "message-actions";
+
+    actions.innerHTML = `
+      <button class="action-btn copy-btn">Copy</button>
+    `;
+
+    actions
+      .querySelector(".copy-btn")
+      .addEventListener("click", () => {
+        copyText(message.content || "");
+      });
+
+    content.appendChild(actions);
+  }
+
+  if (message.role === "user") {
+    row.appendChild(content);
+    row.appendChild(avatar);
+  } else {
+    row.appendChild(avatar);
+    row.appendChild(content);
+  }
+
+  chatInner.appendChild(row);
+}
+
+
+/* =========================================================
+   CREATE LIVE AI MESSAGE
+========================================================= */
+
+function createLiveAIMessage() {
+
+  const row = document.createElement("div");
+  row.className = "message ai";
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar ai";
+  avatar.textContent = "F";
+
+  const content = document.createElement("div");
+  content.className = "message-content";
+
+  const text = document.createElement("div");
+  text.className = "message-text";
+
+  text.innerHTML = `
+    <span class="typing">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+  `;
+
+  content.appendChild(text);
+
+  row.appendChild(avatar);
+  row.appendChild(content);
+
+  chatInner.appendChild(row);
+
+  return {
+    row,
+    text,
+    content
+  };
+}
+
+
+/* =========================================================
+   USER MESSAGE
+========================================================= */
+
+function addUserMessage(text) {
+
+  const message = {
+    role: "user",
+    content: text
+  };
+
+  conversation.push(message);
+
+  const row = document.createElement("div");
+  row.className = "message user";
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar user";
+  avatar.textContent = "You";
+
+  const content = document.createElement("div");
+  content.className = "message-content";
+
+  const messageText = document.createElement("div");
+  messageText.className = "message-text";
+  messageText.textContent = text;
+
+  content.appendChild(messageText);
+
+  row.appendChild(content);
+  row.appendChild(avatar);
+
+  chatInner.appendChild(row);
+
+  return message;
+}
+
+
+/* =========================================================
+   SEND
+========================================================= */
+
+async function sendMessage(customText = null) {
+
+  if (isGenerating) return;
+
+  const text = (
+    customText !== null
+      ? customText
+      : input.value
+  ).trim();
+
+  if (!text) return;
+
+  if (welcome) {
+    welcome.style.display = "none";
+  }
+
+  input.value = "";
+  autoResize();
+
+  addUserMessage(text);
+
+  currentRetryText = text;
+
+  const ai = createLiveAIMessage();
+
+  scrollToBottom();
+
+  isGenerating = true;
+  controller = new AbortController();
+
+  setGeneratingUI(true);
+
+  let fullReply = "";
+
+  try {
+
+    /*
+      Send only the last 8 messages.
+
+      This keeps context while reducing request size and latency.
+    */
+    const messagesToSend = conversation
+      .slice(-8)
+      .map(m => ({
+        role: m.role,
+        content: m.content
+      }));
+
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        messages: messagesToSend
+      }),
+      signal: controller.signal
+    });
+
+    if (!response.ok) {
+
+      let errorMessage =
+        `Server error (${response.status})`;
+
+      try {
+        const data = await response.json();
+
+        if (data?.error) {
+          errorMessage = data.error;
+        }
+      } catch {}
+
+      throw new Error(errorMessage);
+    }
+
+    if (!response.body) {
+      throw new Error(
+        "Streaming is not supported by this browser."
+      );
+    }
+
+    /*
+      Read the SSE stream.
+    */
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+
+    let buffer = "";
+
+    while (true) {
+
+      const { value, done } =
+        await reader.read();
+
+      if (done) break;
+
+      buffer += decoder.decode(
+        value,
+        { stream: true }
+      );
+
+      /*
+        SSE events normally end with a blank line.
+      */
+
+      const events = buffer.split(/\r?\n\r?\n/);
+
+      buffer = events.pop() || "";
+
+      for (const event of events) {
+
+        const lines =
+          event.split(/\r?\n/);
+
+        for (const line of lines) {
+
+          if (!line.startsWith("data:")) {
+            continue;
+          }
+
+          const raw =
+            line.slice(5).trim();
+
+          if (!raw || raw === "[DONE]") {
+            continue;
+          }
+
+          let packet;
+
+          try {
+            packet = JSON.parse(raw);
+          } catch {
+            continue;
+          }
+
+          if (packet.error) {
+            throw new Error(packet.error);
+          }
+
+          if (packet.text) {
+
+            if (!fullReply) {
+              textClearTyping(ai.text);
+            }
+
+            fullReply += packet.text;
+
+            /*
+              textContent is deliberately used here.
+              This prevents streamed AI output from becoming HTML.
+            */
+
+            ai.text.textContent =
+              fullReply;
+
+            scrollToBottom();
+          }
+        }
+      }
+    }
+
+    /*
+      If the stream somehow completed without text,
+      the backend should already have attempted fallback.
+    */
+
+    if (!fullReply.trim()) {
+      throw new Error(
+        "FinAI returned an empty response. Please try again."
+      );
+    }
+
+    /*
+      Add assistant response to conversation.
+    */
+
+    conversation.push({
+      role: "assistant",
+      content: fullReply
+    });
+
+    addAIActionButtons(
+      ai.content,
+      fullReply
+    );
+
+    saveConversation();
+    saveHistory();
+
+  } catch (error) {
+
+    if (error.name === "AbortError") {
+
+      /*
+        User intentionally stopped generation.
+      */
+
+      if (fullReply.trim()) {
+
+        ai.text.textContent =
+          fullReply + "\n\n[Generation stopped]";
+
+        conversation.push({
+          role: "assistant",
+          content: fullReply
+        });
+
+        saveConversation();
+      } else {
+
+        ai.row.remove();
+      }
+
+      return;
+    }
+
+    console.error("FinAI error:", error);
+
+    showAIError(
+      ai,
+      error.message || "Something went wrong."
+    );
+
+  } finally {
+
+    isGenerating = false;
+    controller = null;
+
+    setGeneratingUI(false);
+
+    scrollToBottom();
+  }
+}
+
+
+/* =========================================================
+   STREAM HELPERS
+========================================================= */
+
+function textClearTyping(element) {
+
+  element.innerHTML = "";
+}
+
+
+function addAIActionButtons(content, reply) {
+
+  const existing =
+    content.querySelector(".message-actions");
+
+  if (existing) {
+    existing.remove();
+  }
+
+  const actions =
+    document.createElement("div");
+
+  actions.className = "message-actions";
+
+  const copy =
+    document.createElement("button");
+
+  copy.className = "action-btn";
+  copy.textContent = "Copy";
+
+  copy.addEventListener(
+    "click",
+    () => copyText(reply)
+  );
+
+  actions.appendChild(copy);
+
+  content.appendChild(actions);
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function showAIError(ai, message) {
+
+  ai.text.innerHTML = "";
+
+  const box =
+    document.createElement("div");
+
+  box.className = "error-box";
+
+  box.textContent =
+    "⚠️ " + message;
+
+  const retry =
+    document.createElement("button");
+
+  retry.className = "retry-btn";
+  retry.textContent = "↻ Try again";
+
+  retry.addEventListener(
+    "click",
+    () => retryLastMessage(ai.row)
+  );
+
+  box.appendChild(
+    document.createElement("br")
+  );
+
+  box.appendChild(retry);
+
+  ai.text.appendChild(box);
+}
+
+
+function retryLastMessage(row) {
+
+  if (isGenerating) return;
+
+  if (row) {
+    row.remove();
+  }
+
+  /*
+    Remove the failed user message from
+    conversation so it isn't duplicated.
+  */
+
+  if (
+    conversation.length &&
+    conversation[conversation.length - 1].role === "user"
+  ) {
+    conversation.pop();
+  }
+
+  sendMessage(currentRetryText);
+}
+
+
+/* =========================================================
+   STOP
+========================================================= */
+
+function stopGeneration() {
+
+  if (controller) {
+    controller.abort();
+  }
+}
+
+
+/* =========================================================
+   UI STATE
+========================================================= */
+
+function setGeneratingUI(generating) {
+
+  if (generating) {
+
+    sendBtn.className = "stop-btn";
+    sendBtn.textContent = "■";
+    sendBtn.title = "Stop";
+    sendBtn.setAttribute("aria-label", "Stop");
+
+  } else {
+
+    sendBtn.className = "send-btn";
+    sendBtn.textContent = "➤";
+    sendBtn.title = "Send";
+    sendBtn.setAttribute("aria-label", "Send");
+  }
+}
+
+
+/* =========================================================
+   COPY
+========================================================= */
+
+async function copyText(text) {
+
+  try {
+
+    await navigator.clipboard.writeText(text);
+
+  } catch {
+
+    const textarea =
+      document.createElement("textarea");
+
+    textarea.value = text;
+
+    document.body.appendChild(textarea);
+
+    textarea.select();
+
+    document.execCommand("copy");
+
+    textarea.remove();
+  }
+}
+
+
+/* =========================================================
+   NEW CHAT
+========================================================= */
+
+function newChat() {
+
+  if (isGenerating) {
+    stopGeneration();
+  }
+
+  if (conversation.length) {
+    saveHistory();
+  }
+
+  conversation = [];
+
+  currentChatId =
+    Date.now().toString() +
+    Math.random().toString(36).slice(2);
+
+  localStorage.removeItem(STORAGE_KEY);
+
+  createWelcome();
+
+  scrollToBottom();
+
+  input.focus();
+}
+
+
+newChatBtn.addEventListener(
+  "click",
+  newChat
+);
+
+mobileNewChat.addEventListener(
+  "click",
+  newChat
+);
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function applyTheme() {
+
+  const dark =
+    localStorage.getItem(THEME_KEY) === "dark";
+
+  document.body.classList.toggle(
+    "dark",
+    dark
+  );
+
+  themeBtn.textContent =
+    dark
+      ? "☀ Light Mode"
+      : "☾ Dark Mode";
+}
+
+
+themeBtn.addEventListener(
+  "click",
+  () => {
+
+    const dark =
+      !document.body.classList.contains("dark");
+
+    document.body.classList.toggle(
+      "dark",
+      dark
+    );
+
+    localStorage.setItem(
+      THEME_KEY,
+      dark ? "dark" : "light"
+    );
+
+    applyTheme();
+  }
+);
+
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+function autoResize() {
+
+  input.style.height = "auto";
+
+  input.style.height =
+    Math.min(
+      input.scrollHeight,
+      160
+    ) + "px";
+}
+
+
+input.addEventListener(
+  "input",
+  autoResize
+);
+
 
 input.addEventListener(
   "keydown",
-  function(event) {
+  event => {
 
     if (
       event.key === "Enter" &&
@@ -1202,853 +1685,80 @@ input.addEventListener(
 
       event.preventDefault();
 
-      sendMessage();
-
+      if (!isGenerating) {
+        sendMessage();
+      }
     }
-
   }
 );
 
 
-/* AUTO RESIZE */
+/* =========================================================
+   SEND / STOP BUTTON
+========================================================= */
 
-input.addEventListener(
-  "input",
-  function() {
+sendBtn.addEventListener(
+  "click",
+  () => {
 
-    this.style.height = "auto";
-
-    this.style.height =
-      Math.min(
-        this.scrollHeight,
-        130
-      ) + "px";
-
+    if (isGenerating) {
+      stopGeneration();
+    } else {
+      sendMessage();
+    }
   }
 );
 
 
-/* SUGGESTION */
+/* =========================================================
+   SUGGESTIONS
+========================================================= */
 
-function useSuggestion(text) {
+document
+  .querySelectorAll(".suggestion")
+  .forEach(button => {
 
-  input.value = text;
+    button.addEventListener(
+      "click",
+      () => {
 
-  input.focus();
+        input.value =
+          button.dataset.prompt;
 
-  sendMessage();
+        autoResize();
 
-}
-
-
-/* NEW CHAT */
-
-function newChat() {
-
-  if (controller) {
-
-    controller.abort();
-
-    controller = null;
-
-  }
-
-  messages = [];
-
-  chat.innerHTML = `
-    <div
-      class="welcome"
-      id="welcome"
-    >
-
-      <div class="welcome-logo">
-        F
-      </div>
-
-      <h1>
-        Welcome to FinAI
-      </h1>
-
-      <p>
-        Your intelligent assistant for finance,
-        contracts, GST, audit and more.
-      </p>
-
-      <div class="suggestions">
-
-        <div
-          class="suggestion"
-          onclick="
-            useSuggestion(
-              'Explain FIDIC Clause 13 in simple language.'
-            )
-          "
-        >
-          <div class="suggestion-title">
-            📑 Contract Analysis
-          </div>
-
-          <div class="suggestion-text">
-            Explain FIDIC Clause 13 in simple language.
-          </div>
-        </div>
-
-        <div
-          class="suggestion"
-          onclick="
-            useSuggestion(
-              'Explain the difference between GSTR-2A and GSTR-2B.'
-            )
-          "
-        >
-          <div class="suggestion-title">
-            🧾 GST Assistance
-          </div>
-
-          <div class="suggestion-text">
-            Understand GST provisions and reconciliations.
-          </div>
-        </div>
-
-        <div
-          class="suggestion"
-          onclick="
-            useSuggestion(
-              'Analyse this situation from an audit point of view.'
-            )
-          "
-        >
-          <div class="suggestion-title">
-            🔍 Audit Analysis
-          </div>
-
-          <div class="suggestion-text">
-            Examine issues from an audit perspective.
-          </div>
-        </div>
-
-        <div
-          class="suggestion"
-          onclick="
-            useSuggestion(
-              'Help me draft a professional finance note.'
-            )
-          "
-        >
-          <div class="suggestion-title">
-            ✍️ Professional Drafting
-          </div>
-
-          <div class="suggestion-text">
-            Draft clear professional finance communications.
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  `;
-
-  input.value = "";
-
-  input.style.height = "auto";
-
-  sendButton.classList.remove("stop");
-
-  sendButton.innerText = "➤";
-
-  sendButton.onclick = sendMessage;
-
-}
-
-
-/* SEND */
-
-async function sendMessage() {
-
-  /*
-   If currently generating,
-   button stops generation.
-  */
-
-  if (controller) {
-
-    controller.abort();
-
-    controller = null;
-
-    sendButton.classList.remove("stop");
-
-    sendButton.innerText = "➤";
-
-    return;
-
-  }
-
-
-  const text =
-    input.value.trim();
-
-  if (!text) return;
-
-
-  /* REMOVE WELCOME */
-
-  const welcome =
-    document.getElementById("welcome");
-
-  if (welcome) {
-
-    welcome.remove();
-
-  }
-
-
-  /* ADD USER MESSAGE */
-
-  addUserMessage(text);
-
-
-  /* SAVE MESSAGE */
-
-  messages.push({
-
-    role: "user",
-
-    content: text
-
+        input.focus();
+      }
+    );
   });
 
 
-  /* CLEAR */
-
-  input.value = "";
-
-  input.style.height = "auto";
-
-
-  /* AI MESSAGE */
-
-  const ai = createAIMessage();
-
-
-  /* CONTROLLER */
-
-  controller =
-    new AbortController();
-
-
-  sendButton.classList.add("stop");
-
-  sendButton.innerText = "■";
-
-
-  try {
-
-    const response =
-      await fetch(
-        "/api/chat",
-        {
-
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json",
-
-            "Accept":
-              "text/event-stream"
-
-          },
-
-          body: JSON.stringify({
-
-            messages
-
-          }),
-
-          signal:
-            controller.signal
-
-        }
-      );
-
-
-    if (!response.ok) {
-
-      let errorMessage =
-        "AI request failed.";
-
-      try {
-
-        const data =
-          await response.json();
-
-        errorMessage =
-          data.error ||
-          errorMessage;
-
-      } catch {
-
-        // ignore
-
-      }
-
-      throw new Error(
-        errorMessage
-      );
-
-    }
-
-
-    if (!response.body) {
-
-      throw new Error(
-        "No response stream received."
-      );
-
-    }
-
-
-    const reader =
-      response.body.getReader();
-
-    const decoder =
-      new TextDecoder();
-
-    let buffer = "";
-
-    let fullReply = "";
-
-    while (true) {
-
-      const {
-        value,
-        done
-      } =
-        await reader.read();
-
-
-      if (done) break;
-
-
-      buffer +=
-        decoder.decode(
-          value,
-          {
-            stream: true
-          }
-        );
-
-
-      const events =
-        buffer.split("\n\n");
-
-      buffer =
-        events.pop() || "";
-
-
-      for (
-        const event of events
-      ) {
-
-        const lines =
-          event.split("\n");
-
-
-        for (
-          const line of lines
-        ) {
-
-          if (
-            !line.startsWith("data:")
-          ) {
-            continue;
-          }
-
-
-          const jsonText =
-            line
-              .slice(5)
-              .trim();
-
-
-          if (!jsonText) {
-            continue;
-          }
-
-
-          let data;
-
-          try {
-
-            data =
-              JSON.parse(
-                jsonText
-              );
-
-          } catch {
-
-            continue;
-
-          }
-
-
-          if (data.error) {
-
-            throw new Error(
-              data.error
-            );
-
-          }
-
-
-          if (data.text) {
-
-            fullReply +=
-              data.text;
-
-            ai.text.innerText =
-              fullReply;
-
-            scrollToBottom();
-
-          }
-
-        }
-
-      }
-
-    }
-
-
-    if (!fullReply.trim()) {
-
-      throw new Error(
-        "FinAI returned an empty response."
-      );
-
-    }
-
-
-    /* SAVE AI RESPONSE */
-
-    messages.push({
-
-      role: "assistant",
-
-      content: fullReply
-
-    });
-
-
-    /* ACTIONS */
-
-    addActions(
-      ai.container,
-      fullReply
-    );
-
-
-    addRecentChat(text);
-
-
-  } catch (error) {
-
-
-    if (
-      error.name ===
-      "AbortError"
-    ) {
-
-      if (
-        ai.text.innerText.trim() ===
-        "Thinking..."
-      ) {
-
-        ai.text.innerText =
-          "Generation stopped.";
-
-      }
-
-    } else {
-
-      ai.text.innerText =
-        "⚠️ Sorry, something went wrong.\n\n" +
-        error.message;
-
-      addRetryButton(
-        ai.container,
-        text
-      );
-
-    }
-
-  }
-
-
-  controller = null;
-
-  sendButton.classList.remove("stop");
-
-  sendButton.innerText = "➤";
-
-  sendButton.onclick =
-    sendMessage;
-
-  input.focus();
-
-  scrollToBottom();
-
-}
-
-
-/* USER MESSAGE */
-
-function addUserMessage(text) {
-
-  const row =
-    document.createElement("div");
-
-  row.className =
-    "message-row user-row";
-
-
-  row.innerHTML = `
-
-    <div class="avatar user-avatar">
-      You
-    </div>
-
-    <div class="message-content">
-
-      <div class="message-name">
-        You
-      </div>
-
-      <div class="message-text">
-        ${escapeHtml(text)}
-      </div>
-
-    </div>
-
-  `;
-
-
-  chat.appendChild(row);
-
-  scrollToBottom();
-
-}
-
-
-/* AI MESSAGE */
-
-function createAIMessage() {
-
-  const row =
-    document.createElement("div");
-
-  row.className =
-    "message-row";
-
-
-  const content =
-    document.createElement("div");
-
-  content.className =
-    "message-content";
-
-
-  const avatar =
-    document.createElement("div");
-
-  avatar.className =
-    "avatar ai-avatar";
-
-  avatar.innerText =
-    "F";
-
-
-  const name =
-    document.createElement("div");
-
-  name.className =
-    "message-name";
-
-  name.innerText =
-    "FinAI";
-
-
-  const text =
-    document.createElement("div");
-
-  text.className =
-    "message-text";
-
-  text.innerHTML = `
-    <div class="typing">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  `;
-
-
-  content.appendChild(name);
-
-  content.appendChild(text);
-
-  row.appendChild(avatar);
-
-  row.appendChild(content);
-
-  chat.appendChild(row);
-
-
-  /*
-   Replace typing animation
-   when first text arrives.
-  */
-
-  const originalText =
-    text;
-
-
-  return {
-
-    container: content,
-
-    text: {
-
-      get innerText() {
-
-        return originalText.innerText;
-
-      },
-
-      set innerText(value) {
-
-        originalText.innerText =
-          value;
-
-      }
-
-    }
-
-  };
-
-}
-
-
-/* ACTIONS */
-
-function addActions(
-  container,
-  reply
-) {
-
-  const actions =
-    document.createElement("div");
-
-  actions.className =
-    "message-actions";
-
-
-  const copy =
-    document.createElement("button");
-
-  copy.className =
-    "action-button";
-
-  copy.innerText =
-    "Copy";
-
-
-  copy.onclick =
-    async function() {
-
-      try {
-
-        await navigator.clipboard.writeText(
-          reply
-        );
-
-        copy.innerText =
-          "Copied ✓";
-
-        setTimeout(
-          () => {
-            copy.innerText =
-              "Copy";
-          },
-          1500
-        );
-
-      } catch {
-
-        copy.innerText =
-          "Copy failed";
-
-      }
-
-    };
-
-
-  actions.appendChild(copy);
-
-  container.appendChild(actions);
-
-}
-
-
-/* RETRY */
-
-function addRetryButton(
-  container,
-  text
-) {
-
-  const retry =
-    document.createElement("button");
-
-  retry.className =
-    "action-button";
-
-  retry.innerText =
-    "↻ Try again";
-
-
-  retry.onclick =
-    function() {
-
-      input.value =
-        text;
-
-      sendMessage();
-
-    };
-
-
-  container.appendChild(retry);
-
-}
-
-
-/* RECENT CHAT */
-
-function addRecentChat(text) {
-
-  const recent =
-    document.getElementById(
-      "recentChats"
-    );
-
-
-  if (
-    recent.innerText.trim() ===
-    "No recent conversations"
-  ) {
-
-    recent.innerHTML = "";
-
-  }
-
-
-  const item =
-    document.createElement("div");
-
-  item.className =
-    "recent-item";
-
-  item.innerText =
-    text;
-
-
-  item.onclick =
-    function() {
-
-      input.value =
-        text;
-
-      input.focus();
-
-    };
-
-
-  recent.prepend(item);
-
-
-  if (
-    recent.children.length >
-    10
-  ) {
-
-    recent.removeChild(
-      recent.lastChild
-    );
-
-  }
-
-}
-
-
-/* THEME */
-
-function toggleTheme() {
-
-  document.body.classList.toggle(
-    "dark"
-  );
-
-}
-
-
-/* MOBILE */
-
-function toggleSidebar() {
-
-  document
-    .getElementById("sidebar")
-    .classList.toggle(
-      "open"
-    );
-
-}
-
-
-/* SCROLL */
+/* =========================================================
+   SCROLL
+========================================================= */
 
 function scrollToBottom() {
 
-  requestAnimationFrame(
-    () => {
-
-      chat.scrollTop =
-        chat.scrollHeight;
-
-    }
-  );
-
+  requestAnimationFrame(() => {
+    chat.scrollTop =
+      chat.scrollHeight;
+  });
 }
 
 
-/* SECURITY */
+/* =========================================================
+   INIT
+========================================================= */
 
-function escapeHtml(text) {
+applyTheme();
+renderHistory();
+loadConversation();
 
-  const div =
-    document.createElement("div");
+autoResize();
 
-  div.innerText =
-    text;
-
-  return div.innerHTML;
-
-}
+input.focus();
 
 </script>
 
 </body>
-
 </html>
