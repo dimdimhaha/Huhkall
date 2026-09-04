@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nigga's Birthday 🎂</title>
+<title>Pratyush's Birthday 🎂</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -14,701 +14,575 @@
     padding: 0;
 }
 
-:root {
-    --pink: #ff4ecd;
-    --purple: #875cff;
-    --cyan: #55eaff;
-    --white: #ffffff;
-}
-
-html {
-    scroll-behavior: smooth;
+html, body {
+    min-height: 100%;
 }
 
 body {
-    min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
-    color: white;
-    background:
-        radial-gradient(circle at 20% 20%, rgba(157,92,255,.20), transparent 30%),
-        radial-gradient(circle at 80% 30%, rgba(255,78,205,.17), transparent 30%),
-        linear-gradient(135deg, #080812, #140d25);
     overflow-x: hidden;
+    background:
+        radial-gradient(circle at top, #402080 0%, #160b2d 45%, #080510 100%);
+    color: white;
 }
+
+/* ---------------- BACKGROUND ---------------- */
+
+.background-glow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255, 0, 128, .18), transparent 25%),
+        radial-gradient(circle at 80% 30%, rgba(0, 200, 255, .15), transparent 25%),
+        radial-gradient(circle at 50% 80%, rgba(255, 220, 0, .12), transparent 25%);
+}
+
+/* ---------------- MAIN ---------------- */
 
 .page {
-    min-height: 100vh;
     position: relative;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* =====================================================
-   COUNTDOWN
-===================================================== */
-
-#countdownPage {
+    z-index: 2;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 30px 20px;
+    padding: 45px 20px 80px;
     text-align: center;
 }
 
-.countdown-container {
-    width: min(1000px, 100%);
+.small-top {
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: .75;
+    margin-bottom: 15px;
 }
 
-.top-decoration {
-    font-size: 25px;
-    letter-spacing: 10px;
-    margin-bottom: 30px;
-    animation: twinkle 2s infinite alternate;
-}
-
-.countdown-title {
-    font-size: clamp(2.2rem, 6vw, 5rem);
+.main-title {
+    font-size: clamp(32px, 7vw, 75px);
     font-weight: 900;
-    line-height: 1.1;
+    line-height: 1;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+
     background: linear-gradient(
         90deg,
-        #fff,
-        #ff72dc,
-        #9d7aff,
-        #55eaff,
-        #fff
+        #ff4ecd,
+        #ffe45c,
+        #55f4ff,
+        #ff4ecd
     );
-    background-size: 300%;
+
+    background-size: 300% 100%;
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradientMove 5s linear infinite;
+    color: transparent;
+
+    animation: titleGradient 5s linear infinite;
 }
 
-.countdown-subtitle {
-    margin-top: 15px;
-    color: rgba(255,255,255,.65);
+@keyframes titleGradient {
+    0% {
+        background-position: 0%;
+    }
+    100% {
+        background-position: 300%;
+    }
 }
 
-.countdown-boxes {
-    margin-top: 50px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
+/* ---------------- COUNTDOWN ---------------- */
+
+#countdownSection {
+    width: 100%;
+    max-width: 1000px;
 }
 
-.flip-card {
-    position: relative;
-    height: 150px;
-    border-radius: 24px;
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.14);
+.countdown-heading {
+    font-size: clamp(26px, 5vw, 50px);
+    font-weight: 900;
+    margin-bottom: 30px;
+}
+
+.countdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(8px, 2vw, 20px);
+    flex-wrap: wrap;
+}
+
+.flip-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+}
+
+.flip-box {
+    width: clamp(72px, 15vw, 145px);
+    height: clamp(82px, 16vw, 150px);
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.16),
+            rgba(255,255,255,.04)
+        );
+
+    border: 1px solid rgba(255,255,255,.22);
+
     box-shadow:
-        0 20px 50px rgba(0,0,0,.35),
-        inset 0 1px rgba(255,255,255,.1);
-    backdrop-filter: blur(20px);
+        0 20px 50px rgba(0,0,0,.4),
+        inset 0 1px 0 rgba(255,255,255,.15);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
     overflow: hidden;
 }
 
-.flip-card::before {
+.flip-box::after {
     content: "";
     position: absolute;
     left: 0;
     right: 0;
     top: 50%;
     height: 1px;
-    background: rgba(255,255,255,.13);
+    background: rgba(0,0,0,.3);
 }
 
 .flip-number {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(3rem, 8vw, 6rem);
+    font-size: clamp(40px, 9vw, 88px);
     font-weight: 900;
-    letter-spacing: -4px;
-    perspective: 500px;
-}
-
-.flip-number.animate {
-    animation: flip .55s ease;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 5px 15px rgba(0,0,0,.35);
 }
 
 .flip-label {
-    position: absolute;
-    bottom: 13px;
-    left: 0;
-    right: 0;
-    font-size: .7rem;
-    letter-spacing: 3px;
-    font-weight: 700;
-    color: rgba(255,255,255,.55);
-}
-
-.countdown-note {
-    margin-top: 35px;
-    color: rgba(255,255,255,.45);
-    font-size: .9rem;
-}
-
-/* =====================================================
-   FLOATING WISH BUTTON
-===================================================== */
-
-.wishes-floating-button {
-    position: fixed;
-    right: 22px;
-    bottom: 22px;
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,.25);
-    background: linear-gradient(
-        135deg,
-        rgba(255,78,205,.95),
-        rgba(126,74,255,.95)
-    );
-    color: white;
-    font-size: 27px;
-    cursor: pointer;
-    z-index: 9999;
-    box-shadow:
-        0 10px 35px rgba(255,78,205,.35),
-        0 0 0 0 rgba(255,78,205,.5);
-    animation: pulseButton 2s infinite;
-}
-
-.wishes-floating-button:hover {
-    transform: scale(1.1);
-}
-
-.wish-tooltip {
-    position: absolute;
-    right: 78px;
-    bottom: 10px;
-    white-space: nowrap;
-    padding: 9px 13px;
-    border-radius: 12px;
-    background: rgba(20,15,35,.95);
-    border: 1px solid rgba(255,255,255,.15);
     font-size: 12px;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(8px);
-    transition: .2s;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: .7;
 }
 
-.wishes-floating-button:hover .wish-tooltip {
-    opacity: 1;
-    transform: translateX(0);
+.flip-animation {
+    animation: flipNumber .5s ease;
 }
 
-/* =====================================================
-   MODAL
-===================================================== */
+@keyframes flipNumber {
+    0% {
+        transform: rotateX(-90deg);
+        opacity: 0;
+    }
 
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.72);
-    backdrop-filter: blur(12px);
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    100% {
+        transform: rotateX(0deg);
+        opacity: 1;
+    }
 }
 
-.wish-modal {
-    width: min(650px, 100%);
-    background:
-        linear-gradient(
-            145deg,
-            rgba(40,20,65,.98),
-            rgba(12,10,25,.98)
-        );
-    border: 1px solid rgba(255,255,255,.17);
-    border-radius: 30px;
-    padding: 30px;
-    box-shadow: 0 30px 100px rgba(0,0,0,.7);
-    animation: modalIn .3s ease;
-    position: relative;
+/* ---------------- MESSAGE ---------------- */
+
+.message {
+    margin-top: 35px;
+    font-size: 18px;
+    opacity: .78;
 }
 
-.close-modal {
-    position: absolute;
-    right: 18px;
-    top: 15px;
-    border: 0;
-    background: rgba(255,255,255,.08);
-    color: white;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 20px;
-}
+/* ---------------- BIRTHDAY ---------------- */
 
-.wish-modal h2 {
-    font-size: 2rem;
-    margin-bottom: 8px;
-}
-
-.modal-subtitle {
-    color: rgba(255,255,255,.6);
-    margin-bottom: 25px;
-    line-height: 1.5;
-}
-
-.wish-form {
-    display: grid;
-    grid-template-columns: .75fr 1.25fr;
-    gap: 15px;
-}
-
-.form-field {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.form-field label {
-    font-size: .8rem;
-    color: rgba(255,255,255,.65);
-    letter-spacing: 1px;
-}
-
-.form-field input,
-.form-field textarea {
+#birthdaySection {
+    display: none;
     width: 100%;
-    border: 1px solid rgba(255,255,255,.13);
-    background: rgba(255,255,255,.07);
-    color: white;
-    border-radius: 15px;
-    padding: 14px;
-    outline: none;
+    max-width: 1100px;
 }
 
-.form-field input:focus,
-.form-field textarea:focus {
-    border-color: var(--pink);
-    box-shadow: 0 0 0 3px rgba(255,78,205,.12);
-}
+.birthday-title {
+    font-size: clamp(45px, 10vw, 120px);
+    font-weight: 1000;
+    text-transform: uppercase;
+    line-height: .95;
 
-.form-field textarea {
-    min-height: 110px;
-    resize: vertical;
-}
+    background: linear-gradient(
+        90deg,
+        #ffdb4d,
+        #ff4fa3,
+        #55e9ff,
+        #b85cff,
+        #ffdb4d
+    );
 
-.submit-wish {
-    grid-column: 1 / -1;
-    border: 0;
-    border-radius: 15px;
-    padding: 15px;
-    background: linear-gradient(90deg, #ff4ecd, #875cff);
-    color: white;
-    font-weight: 800;
-    cursor: pointer;
-}
+    background-size: 400% 100%;
+    -webkit-background-clip: text;
+    color: transparent;
 
-.submit-wish:disabled {
-    opacity: .55;
-    cursor: not-allowed;
-}
+    animation: titleGradient 4s linear infinite;
 
-.honeypot {
-    display: none !important;
-}
+    text-shadow: 0 10px 40px rgba(255,255,255,.08);
 
-/* =====================================================
-   BIRTHDAY
-===================================================== */
-
-#birthdayPage {
-    min-height: 100vh;
-    padding-bottom: 100px;
-}
-
-.garland {
-    position: relative;
-    height: 95px;
-    display: flex;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.garland-line {
-    position: absolute;
-    top: 28px;
-    width: 90%;
-    height: 50px;
-    border-top: 3px solid rgba(255,255,255,.6);
-    border-radius: 50%;
-}
-
-.flags {
-    position: absolute;
-    top: 28px;
-    width: min(900px, 90%);
-    display: flex;
-    justify-content: space-around;
-}
-
-.flag {
-    width: 42px;
-    height: 50px;
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    background: linear-gradient(180deg, #ff65d7, #744cff);
-    animation: flagSwing 2.5s ease-in-out infinite alternate;
-}
-
-.birthday-hero {
-    text-align: center;
-    padding: 20px 20px 50px;
-}
-
-.small-celebration {
-    font-size: 20px;
-    letter-spacing: 7px;
     margin-bottom: 20px;
 }
 
-.hero-title {
-    font-size: clamp(3rem, 10vw, 8rem);
-    font-weight: 1000;
-    line-height: .95;
-    letter-spacing: -4px;
-    background: linear-gradient(
-        90deg,
-        #fff,
-        #ff70d9,
-        #b37aff,
-        #63eaff,
-        #fff
-    );
-    background-size: 300%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation:
-        gradientMove 5s linear infinite,
-        floatingTitle 3s ease-in-out infinite;
+.birthday-subtitle {
+    font-size: clamp(22px, 4vw, 38px);
+    margin-bottom: 35px;
 }
-
-.hero-name {
-    margin-top: 15px;
-    font-size: clamp(1.4rem, 4vw, 2.4rem);
-    font-weight: 900;
-}
-
-/* =====================================================
-   CAKE
-===================================================== */
 
 .cake {
-    margin: 45px auto 20px;
-    width: 180px;
-    height: 150px;
-    position: relative;
+    font-size: clamp(90px, 20vw, 180px);
+    animation: cakeBounce 1.5s infinite ease-in-out;
 }
 
-.cake-base {
-    position: absolute;
-    bottom: 0;
-    left: 10px;
-    width: 160px;
+@keyframes cakeBounce {
+    0%, 100% {
+        transform: translateY(0) rotate(-2deg);
+    }
+
+    50% {
+        transform: translateY(-15px) rotate(2deg);
+    }
+}
+
+/* ---------------- GARLAND ---------------- */
+
+.garland {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 70px;
-    border-radius: 15px 15px 22px 22px;
-    background: linear-gradient(180deg, #ff75da, #a647db);
-    box-shadow: 0 15px 35px rgba(255,78,205,.3);
+    z-index: 20;
+    pointer-events: none;
+    overflow: hidden;
 }
 
-.cake-middle {
-    position: absolute;
-    bottom: 55px;
-    left: 25px;
-    width: 130px;
-    height: 45px;
-    border-radius: 12px;
-    background: linear-gradient(180deg, #fff, #ffb8e9);
-}
-
-.cake-cream {
-    position: absolute;
-    bottom: 40px;
-    left: 20px;
-    width: 140px;
-    height: 35px;
-    border-radius: 50%;
-    background: white;
-}
-
-.candle {
-    position: absolute;
-    bottom: 92px;
-    left: 84px;
-    width: 13px;
-    height: 40px;
-    background: linear-gradient(90deg,#54e8ff,#fff,#ff65d7);
-    border-radius: 5px;
-}
-
-.flame {
-    position: absolute;
-    left: 79px;
-    bottom: 128px;
-    width: 23px;
-    height: 30px;
-    background: #ffd54a;
-    border-radius: 50% 50% 50% 0;
-    transform: rotate(-45deg);
-    animation: flame .7s infinite alternate;
-    box-shadow: 0 0 25px #ffb300;
-}
-
-/* =====================================================
-   WISHES WALL
-===================================================== */
-
-.wishes-section {
-    width: min(1100px, calc(100% - 35px));
-    margin: 20px auto 0;
-}
-
-.wishes-header {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.wishes-header h2 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 900;
-}
-
-.wishes-header p {
-    color: rgba(255,255,255,.58);
-    margin-top: 8px;
-}
-
-.wishes-count {
+.garland span {
     display: inline-block;
-    margin-top: 12px;
-    padding: 6px 12px;
-    border-radius: 20px;
-    background: rgba(255,255,255,.07);
-    border: 1px solid rgba(255,255,255,.1);
-    font-size: 12px;
+    width: 22px;
+    height: 32px;
+    margin: 0 5px;
+    border-radius: 0 0 15px 15px;
+    transform: rotate(5deg);
+    opacity: .9;
 }
 
-.wishes-wall {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
+.garland span:nth-child(3n) {
+    transform: rotate(-7deg);
 }
 
-.wish-card {
-    position: relative;
-    padding: 23px;
-    border-radius: 23px;
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.095),
-            rgba(255,255,255,.035)
-        );
-    border: 1px solid rgba(255,255,255,.13);
-    box-shadow: 0 15px 45px rgba(0,0,0,.22);
-    backdrop-filter: blur(15px);
-    animation: wishIn .45s ease;
+.garland span:nth-child(4n) {
+    transform: rotate(10deg);
 }
 
-.wish-card::before {
-    content: "♥";
-    position: absolute;
-    top: 15px;
-    right: 18px;
-    color: rgba(255,105,210,.5);
+/* ---------------- BALLOONS ---------------- */
+
+.balloon-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
 }
-
-.wish-name {
-    font-size: 1rem;
-    font-weight: 900;
-    color: #ff91df;
-    margin-bottom: 10px;
-}
-
-.wish-message {
-    color: rgba(255,255,255,.85);
-    line-height: 1.65;
-    word-break: break-word;
-}
-
-.wish-time {
-    margin-top: 14px;
-    color: rgba(255,255,255,.35);
-    font-size: .72rem;
-}
-
-.no-wishes,
-.loading-wishes {
-    text-align: center;
-    padding: 50px 20px;
-    color: rgba(255,255,255,.45);
-}
-
-/* =====================================================
-   AFTER BIRTHDAY
-===================================================== */
-
-#afterPage {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 30px;
-}
-
-.after-box {
-    max-width: 750px;
-}
-
-.after-emoji {
-    font-size: 5rem;
-    animation: floatingTitle 3s ease-in-out infinite;
-}
-
-.after-box h1 {
-    margin-top: 25px;
-    font-size: clamp(2.3rem, 6vw, 5rem);
-    font-weight: 900;
-}
-
-.after-box p {
-    margin-top: 18px;
-    font-size: 1.1rem;
-    color: rgba(255,255,255,.58);
-    line-height: 1.7;
-}
-
-/* =====================================================
-   BALLOONS / CONFETTI
-===================================================== */
 
 .balloon {
-    position: fixed;
-    bottom: -150px;
-    width: 50px;
-    height: 65px;
-    border-radius: 50% 50% 45% 45%;
-    z-index: 2;
-    pointer-events: none;
-    animation: balloonUp linear forwards;
+    position: absolute;
+    bottom: -180px;
+    width: 65px;
+    height: 82px;
+    border-radius: 50% 50% 48% 48%;
+    opacity: .8;
+
+    animation:
+        balloonFloat linear infinite;
+}
+
+.balloon::before {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 100px;
+    background: rgba(255,255,255,.5);
+    left: 50%;
+    top: 78px;
 }
 
 .balloon::after {
     content: "";
     position: absolute;
-    bottom: -70px;
+    bottom: -7px;
     left: 50%;
-    width: 1px;
-    height: 70px;
-    background: rgba(255,255,255,.35);
+    transform: translateX(-50%);
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 10px solid currentColor;
 }
 
-.confetti {
-    position: fixed;
-    top: -20px;
-    width: 8px;
-    height: 15px;
-    z-index: 3;
-    pointer-events: none;
-    animation: confettiFall linear forwards;
-}
-
-/* =====================================================
-   TOAST
-===================================================== */
-
-.toast {
-    position: fixed;
-    left: 50%;
-    bottom: 30px;
-    transform: translate(-50%, 120px);
-    z-index: 20000;
-    padding: 13px 20px;
-    border-radius: 15px;
-    background: rgba(20,15,35,.95);
-    border: 1px solid rgba(255,255,255,.15);
-    box-shadow: 0 15px 50px rgba(0,0,0,.4);
-    transition: .35s;
-    font-size: .9rem;
-}
-
-.toast.show {
-    transform: translate(-50%, 0);
-}
-
-/* =====================================================
-   ANIMATIONS
-===================================================== */
-
-@keyframes gradientMove {
-    0% { background-position: 0%; }
-    100% { background-position: 300%; }
-}
-
-@keyframes flip {
-    0% { transform: rotateX(0deg); }
-    45% { transform: rotateX(-90deg); }
-    100% { transform: rotateX(0deg); }
-}
-
-@keyframes floatingTitle {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-@keyframes twinkle {
-    from { opacity: .45; }
-    to { opacity: 1; }
-}
-
-@keyframes pulseButton {
-    0% {
-        box-shadow:
-            0 10px 35px rgba(255,78,205,.35),
-            0 0 0 0 rgba(255,78,205,.45);
-    }
-
-    70% {
-        box-shadow:
-            0 10px 35px rgba(255,78,205,.35),
-            0 0 0 18px rgba(255,78,205,0);
-    }
-
-    100% {
-        box-shadow:
-            0 10px 35px rgba(255,78,205,.35),
-            0 0 0 0 rgba(255,78,205,0);
-    }
-}
-
-@keyframes modalIn {
+@keyframes balloonFloat {
     from {
-        opacity: 0;
-        transform: scale(.9) translateY(20px);
+        transform: translateY(0) rotate(-4deg);
     }
 
     to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
+        transform: translateY(-125vh) rotate(5deg);
     }
 }
 
-@keyframes wishIn {
+/* ---------------- CONFETTI ---------------- */
+
+.confetti-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 30;
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    top: -20px;
+    width: 9px;
+    height: 15px;
+
+    animation:
+        confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+    to {
+        transform:
+            translateY(110vh)
+            rotate(720deg);
+    }
+}
+
+/* ---------------- WISH BUTTON ---------------- */
+
+.wish-button {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+
+    width: 62px;
+    height: 62px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #ff4fa3,
+        #9b5cff
+    );
+
+    color: white;
+    font-size: 27px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.45);
+
+    z-index: 100;
+
+    transition: .2s;
+}
+
+.wish-button:hover {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+/* ---------------- MODAL ---------------- */
+
+.modal {
+    display: none;
+
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,.72);
+
+    backdrop-filter: blur(7px);
+
+    z-index: 200;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-box {
+    width: min(700px, 100%);
+
+    background:
+        linear-gradient(
+            145deg,
+            #25123f,
+            #10081d
+        );
+
+    border: 1px solid rgba(255,255,255,.18);
+
+    border-radius: 25px;
+
+    padding: 30px;
+
+    box-shadow: 0 30px 80px rgba(0,0,0,.6);
+
+    text-align: left;
+}
+
+.modal-title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 900;
+    margin-bottom: 25px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 18px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field label {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: .7;
+}
+
+.field input,
+.field textarea {
+    width: 100%;
+
+    border: 1px solid rgba(255,255,255,.16);
+
+    background: rgba(255,255,255,.07);
+
+    color: white;
+
+    border-radius: 12px;
+
+    padding: 14px;
+
+    font-size: 16px;
+
+    outline: none;
+}
+
+.field textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+    border-color: #ff59b7;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn {
+    border: none;
+    border-radius: 12px;
+    padding: 13px 22px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: rgba(255,255,255,.1);
+    color: white;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #ff4fa3, #825cff);
+    color: white;
+}
+
+.submit-btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.status {
+    text-align: center;
+    margin-top: 15px;
+    min-height: 22px;
+    font-size: 14px;
+}
+
+/* ---------------- WISH WALL ---------------- */
+
+#wishesSection {
+    display: none;
+
+    width: 100%;
+    max-width: 1100px;
+
+    margin-top: 50px;
+}
+
+.wishes-heading {
+    font-size: clamp(32px, 6vw, 58px);
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.wishes-intro {
+    opacity: .7;
+    margin-bottom: 30px;
+}
+
+.wishes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+.wish-card {
+    text-align: left;
+
+    padding: 22px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.13),
+            rgba(255,255,255,.04)
+        );
+
+    border: 1px solid rgba(255,255,255,.13);
+
+    box-shadow: 0 15px 40px rgba(0,0,0,.2);
+
+    animation: cardAppear .5s ease;
+}
+
+@keyframes cardAppear {
     from {
         opacity: 0;
         transform: translateY(15px);
@@ -720,89 +594,95 @@ body {
     }
 }
 
-@keyframes flagSwing {
-    from { transform: rotate(-4deg); }
-    to { transform: rotate(4deg); }
+.wish-name {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 10px;
 }
 
-@keyframes flame {
-    from {
-        transform: rotate(-45deg) scale(.9);
-    }
-
-    to {
-        transform: rotate(-45deg) scale(1.1);
-    }
+.wish-message {
+    line-height: 1.6;
+    opacity: .85;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
 
-@keyframes balloonUp {
-    to {
-        transform: translateY(-120vh) rotate(15deg);
-    }
+.empty-wishes {
+    opacity: .65;
+    padding: 30px;
 }
 
-@keyframes confettiFall {
-    to {
-        transform: translateY(110vh) rotate(720deg);
-        opacity: 0;
-    }
+/* ---------------- AFTER ---------------- */
+
+#afterSection {
+    display: none;
+    width: 100%;
+    max-width: 850px;
 }
 
-/* =====================================================
-   MOBILE
-===================================================== */
+.after-title {
+    font-size: clamp(40px, 8vw, 80px);
+    font-weight: 900;
+    margin-bottom: 20px;
+}
 
-@media (max-width: 700px) {
+.after-message {
+    font-size: 20px;
+    line-height: 1.7;
+    opacity: .8;
+}
 
-    .countdown-boxes {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        margin-top: 35px;
+/* ---------------- HIDDEN BOT FIELD ---------------- */
+
+.hp {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    opacity: 0 !important;
+}
+
+/* ---------------- MOBILE ---------------- */
+
+@media (max-width: 650px) {
+
+    .page {
+        padding-top: 90px;
     }
 
-    .flip-card {
-        height: 125px;
-        border-radius: 20px;
+    .countdown {
+        gap: 10px;
+    }
+
+    .flip-box {
+        width: 72px;
+        height: 82px;
+        border-radius: 13px;
     }
 
     .flip-number {
-        font-size: 3.7rem;
+        font-size: 40px;
     }
 
-    .wish-form {
+    .flip-label {
+        font-size: 9px;
+        letter-spacing: 2px;
+    }
+
+    .form-grid {
         grid-template-columns: 1fr;
     }
 
-    .submit-wish {
-        grid-column: auto;
+    .modal-box {
+        padding: 22px;
     }
 
-    .wishes-wall {
-        grid-template-columns: 1fr;
+    .form-actions {
+        flex-direction: column-reverse;
     }
 
-    .wish-modal {
-        padding: 25px 20px;
-    }
-
-    .wishes-floating-button {
-        width: 58px;
-        height: 58px;
-        right: 16px;
-        bottom: 16px;
-    }
-
-    .wish-tooltip {
-        display: none;
-    }
-
-    .hero-title {
-        letter-spacing: -2px;
-    }
-
-    .flag {
-        width: 27px;
-        height: 35px;
+    .btn {
+        width: 100%;
     }
 }
 </style>
@@ -810,274 +690,227 @@ body {
 
 <body>
 
+<div class="background-glow"></div>
 
-<!-- =====================================================
-     COUNTDOWN PAGE
-===================================================== -->
+<!-- Garland -->
+<div class="garland" id="garland"></div>
 
-<section id="countdownPage" class="page">
+<!-- Balloons -->
+<div class="balloon-container" id="balloons"></div>
 
-    <div class="countdown-container">
+<!-- Confetti -->
+<div class="confetti-container" id="confetti"></div>
 
-        <div class="top-decoration">
-            ✦ ✧ ★ ✧ ✦
+<div class="page">
+
+    <!-- COUNTDOWN -->
+
+    <section id="countdownSection">
+
+        <div class="small-top">
+            A special day is almost here ✨
         </div>
 
-        <h1 class="countdown-title">
-            Nigga's birthday coming soon 😝
+        <h1 class="main-title">
+            Happiest Birthday Pratyush
         </h1>
 
-        <p class="countdown-subtitle">
-            September 9 • The countdown is on 🎂
+        <h2 class="countdown-heading">
+            Nigga's birthday coming soon 😝
+        </h2>
+
+        <div class="countdown">
+
+            <div class="flip-unit">
+                <div class="flip-box">
+                    <span class="flip-number" id="days">00</span>
+                </div>
+                <span class="flip-label">Days</span>
+            </div>
+
+            <div class="flip-unit">
+                <div class="flip-box">
+                    <span class="flip-number" id="hours">00</span>
+                </div>
+                <span class="flip-label">Hours</span>
+            </div>
+
+            <div class="flip-unit">
+                <div class="flip-box">
+                    <span class="flip-number" id="minutes">00</span>
+                </div>
+                <span class="flip-label">Minutes</span>
+            </div>
+
+            <div class="flip-unit">
+                <div class="flip-box">
+                    <span class="flip-number" id="seconds">00</span>
+                </div>
+                <span class="flip-label">Seconds</span>
+            </div>
+
+        </div>
+
+        <p class="message">
+            Get ready for balloons, cake, wishes and madness! 🎈🎂🎉
         </p>
 
-        <div class="countdown-boxes">
-
-            <div class="flip-card">
-                <div id="days" class="flip-number">00</div>
-                <div class="flip-label">DAYS</div>
-            </div>
-
-            <div class="flip-card">
-                <div id="hours" class="flip-number">00</div>
-                <div class="flip-label">HOURS</div>
-            </div>
-
-            <div class="flip-card">
-                <div id="minutes" class="flip-number">00</div>
-                <div class="flip-label">MINUTES</div>
-            </div>
-
-            <div class="flip-card">
-                <div id="seconds" class="flip-number">00</div>
-                <div class="flip-label">SECONDS</div>
-            </div>
-
-        </div>
-
-        <div class="countdown-note">
-            September 9 is almost here 🎈
-        </div>
-
-    </div>
-
-</section>
+    </section>
 
 
-<!-- =====================================================
-     BIRTHDAY PAGE
-===================================================== -->
+    <!-- BIRTHDAY -->
 
-<section id="birthdayPage" class="page hidden">
+    <section id="birthdaySection">
 
-    <div class="garland">
-
-        <div class="garland-line"></div>
-
-        <div class="flags">
-            <div class="flag"></div>
-            <div class="flag"></div>
-            <div class="flag"></div>
-            <div class="flag"></div>
-            <div class="flag"></div>
-            <div class="flag"></div>
-            <div class="flag"></div>
-            <div class="flag"></div>
-            <div class="flag"></div>
-            <div class="flag"></div>
-            <div class="flag"></div>
-        </div>
-
-    </div>
-
-
-    <div class="birthday-hero">
-
-        <div class="small-celebration">
-            ✨ 🎈 ✨ 🎂 ✨ 🎈 ✨
-        </div>
-
-        <h1 class="hero-title">
-            HAPPIEST<br>
-            BIRTHDAY
+        <h1 class="birthday-title">
+            HAPPIEST BIRTHDAY
         </h1>
 
-        <div class="hero-name">
-            PRATYUSH 😭❤️
+        <div class="birthday-subtitle">
+            PRATYUSH ❤️
         </div>
 
         <div class="cake">
-
-            <div class="flame"></div>
-
-            <div class="candle"></div>
-
-            <div class="cake-cream"></div>
-
-            <div class="cake-middle"></div>
-
-            <div class="cake-base"></div>
-
+            🎂
         </div>
 
-    </div>
+        <p class="message">
+            Today is YOUR day. Eat cake. Have fun. Make memories. 😝🎉
+        </p>
+
+    </section>
 
 
-    <!-- =================================================
-         WISHES WALL
-    ================================================== -->
+    <!-- WISHES -->
 
-    <section class="wishes-section">
+    <section id="wishesSection">
 
-        <div class="wishes-header">
+        <h2 class="wishes-heading">
+            Birthday Wishes 💌
+        </h2>
 
-            <h2>
-                💌 Birthday Wishes
-            </h2>
+        <p class="wishes-intro">
+            Messages from everyone who wanted to make Pratyush's day special ❤️
+        </p>
 
-            <p>
-                All the love, messages and wishes for Pratyush ❤️
-            </p>
-
-            <div id="wishCount" class="wishes-count">
-                Loading wishes...
-            </div>
-
-        </div>
-
-        <div id="wishesWall">
-
-            <div class="loading-wishes">
-                Loading birthday wishes... 💌
-            </div>
-
+        <div class="wishes-grid" id="wishesGrid">
         </div>
 
     </section>
 
-</section>
 
+    <!-- AFTER -->
 
-<!-- =====================================================
-     AFTER BIRTHDAY
-===================================================== -->
+    <section id="afterSection">
 
-<section id="afterPage" class="page hidden">
-
-    <div class="after-box">
-
-        <div class="after-emoji">
-            🌙🎂
-        </div>
-
-        <h1>
-            The birthday celebration is over ❤️
+        <h1 class="after-title">
+            🎂 That's a wrap!
         </h1>
 
-        <p>
-            The balloons have flown away, the cake has been eaten,
-            and the celebration has come to an end. 😭
-            <br><br>
-            Come back next year for another celebration! 🎉
+        <p class="after-message">
+            The birthday celebration is over.
+            Come back next year for another celebration! ❤️
         </p>
 
-    </div>
+    </section>
 
-</section>
+</div>
 
 
-<!-- =====================================================
-     FLOATING WISH BUTTON
-===================================================== -->
+<!-- Wish button -->
 
 <button
-    id="wishesButton"
-    class="wishes-floating-button"
-    aria-label="Write a birthday wish">
-
+    class="wish-button"
+    id="wishButton"
+    title="Send a birthday wish"
+>
     💌
-
-    <span class="wish-tooltip">
-        Write a birthday wish
-    </span>
-
 </button>
 
 
-<!-- =====================================================
-     WISH MODAL
-===================================================== -->
+<!-- Wish Modal -->
 
-<div id="wishModal" class="modal-overlay hidden">
+<div class="modal" id="wishModal">
 
-    <div class="wish-modal">
+    <div class="modal-box">
 
-        <button
-            id="closeModal"
-            class="close-modal"
-            aria-label="Close">
-            ×
-        </button>
-
-        <h2>
-            💌 Write a Wish
+        <h2 class="modal-title">
+            Send Pratyush a Wish 💌
         </h2>
 
-        <p id="modalSubtitle" class="modal-subtitle">
-            Your wish will be saved privately until the birthday begins.
-        </p>
-
-        <form id="wishForm" class="wish-form">
-
-            <div class="form-field">
-
-                <label for="wishName">
-                    YOUR NAME
-                </label>
-
-                <input
-                    id="wishName"
-                    type="text"
-                    maxlength="40"
-                    placeholder="Your name"
-                    autocomplete="name"
-                    required>
-
-            </div>
-
-
-            <div class="form-field">
-
-                <label for="wishMessage">
-                    YOUR WISH
-                </label>
-
-                <textarea
-                    id="wishMessage"
-                    maxlength="500"
-                    placeholder="Write your birthday wish..."
-                    required></textarea>
-
-            </div>
-
+        <form id="wishForm">
 
             <!-- Honeypot -->
             <input
-                id="website"
-                class="honeypot"
                 type="text"
+                id="website"
+                class="hp"
+                autocomplete="off"
                 tabindex="-1"
-                autocomplete="off">
+            >
+
+            <div class="form-grid">
+
+                <div class="field">
+
+                    <label for="wishName">
+                        Your Name
+                    </label>
+
+                    <input
+                        id="wishName"
+                        type="text"
+                        maxlength="40"
+                        placeholder="Enter your name"
+                        required
+                    >
+
+                </div>
 
 
-            <button
-                id="submitWish"
-                class="submit-wish"
-                type="submit">
+                <div class="field">
 
-                Send Birthday Wish 💖
+                    <label for="wishMessage">
+                        Your Message
+                    </label>
 
-            </button>
+                    <textarea
+                        id="wishMessage"
+                        maxlength="500"
+                        placeholder="Write your birthday wish..."
+                        required
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="status"
+                id="wishStatus"
+            ></div>
+
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="btn cancel-btn"
+                    id="cancelWish"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn submit-btn"
+                    id="submitWish"
+                >
+                    Send Wish ❤️
+                </button>
+
+            </div>
 
         </form>
 
@@ -1086,18 +919,11 @@ body {
 </div>
 
 
-<!-- =====================================================
-     TOAST
-===================================================== -->
-
-<div id="toast" class="toast"></div>
-
-
 <script>
 
-/* =====================================================
-   YOUR SUPABASE CONNECTION
-===================================================== */
+/* =========================================================
+   SUPABASE CONFIGURATION
+   ========================================================= */
 
 const SUPABASE_URL =
     "https://ozvpptyjxzndtpmrerey.supabase.co";
@@ -1105,11 +931,9 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_5V6fpNjNDNjUUSMgbepryA_ndibNe-9";
 
-
 const {
     createClient
 } = window.supabase;
-
 
 const supabaseClient =
     createClient(
@@ -1118,27 +942,30 @@ const supabaseClient =
     );
 
 
-/* =====================================================
+/* =========================================================
    ELEMENTS
-===================================================== */
+   ========================================================= */
 
-const countdownPage =
-    document.getElementById("countdownPage");
+const countdownSection =
+    document.getElementById("countdownSection");
 
-const birthdayPage =
-    document.getElementById("birthdayPage");
+const birthdaySection =
+    document.getElementById("birthdaySection");
 
-const afterPage =
-    document.getElementById("afterPage");
+const wishesSection =
+    document.getElementById("wishesSection");
 
-const wishesButton =
-    document.getElementById("wishesButton");
+const afterSection =
+    document.getElementById("afterSection");
+
+const wishesGrid =
+    document.getElementById("wishesGrid");
+
+const wishButton =
+    document.getElementById("wishButton");
 
 const wishModal =
     document.getElementById("wishModal");
-
-const closeModal =
-    document.getElementById("closeModal");
 
 const wishForm =
     document.getElementById("wishForm");
@@ -1149,34 +976,41 @@ const wishName =
 const wishMessage =
     document.getElementById("wishMessage");
 
-const submitWish =
+const wishStatus =
+    document.getElementById("wishStatus");
+
+const submitWishButton =
     document.getElementById("submitWish");
 
-const wishesWall =
-    document.getElementById("wishesWall");
+const cancelWish =
+    document.getElementById("cancelWish");
 
-const wishCount =
-    document.getElementById("wishCount");
+const daysElement =
+    document.getElementById("days");
 
-const modalSubtitle =
-    document.getElementById("modalSubtitle");
+const hoursElement =
+    document.getElementById("hours");
 
-const toast =
-    document.getElementById("toast");
+const minutesElement =
+    document.getElementById("minutes");
+
+const secondsElement =
+    document.getElementById("seconds");
 
 
-/* =====================================================
-   BIRTHDAY DATES
-===================================================== */
+/* =========================================================
+   DATE / PAGE STATE
+
+   Uses September 9 at midnight in the visitor's local
+   calendar. The user's birthday date is September 9.
+   ========================================================= */
 
 function getBirthdayDates() {
 
-    const now =
-        new Date();
+    const now = new Date();
 
     const year =
         now.getFullYear();
-
 
     const birthdayStart =
         new Date(
@@ -1189,7 +1023,6 @@ function getBirthdayDates() {
             0
         );
 
-
     const birthdayEnd =
         new Date(
             year,
@@ -1201,7 +1034,6 @@ function getBirthdayDates() {
             0
         );
 
-
     return {
         now,
         birthdayStart,
@@ -1209,10 +1041,6 @@ function getBirthdayDates() {
     };
 }
 
-
-/* =====================================================
-   PAGE STATE
-===================================================== */
 
 function getPageState() {
 
@@ -1222,286 +1050,198 @@ function getPageState() {
         birthdayEnd
     } = getBirthdayDates();
 
-
     if (now < birthdayStart) {
         return "countdown";
     }
-
 
     if (now < birthdayEnd) {
         return "birthday";
     }
 
-
     return "after";
 }
 
 
-let currentState = null;
-
+/* =========================================================
+   PAGE DISPLAY
+   ========================================================= */
 
 function updatePageState() {
 
     const state =
         getPageState();
 
+    countdownSection.style.display =
+        state === "countdown"
+            ? "block"
+            : "none";
 
-    if (state === currentState) {
-        return;
-    }
+    birthdaySection.style.display =
+        state === "birthday"
+            ? "block"
+            : "none";
 
+    wishesSection.style.display =
+        state === "birthday"
+            ? "block"
+            : "none";
 
-    currentState =
-        state;
+    afterSection.style.display =
+        state === "after"
+            ? "block"
+            : "none";
 
+    /*
+       Wish button remains available before and during
+       birthday, but disappears after birthday.
+    */
 
-    countdownPage.classList.add(
-        "hidden"
-    );
+    wishButton.style.display =
+        state === "after"
+            ? "none"
+            : "block";
 
-    birthdayPage.classList.add(
-        "hidden"
-    );
+    if (state === "birthday") {
 
-    afterPage.classList.add(
-        "hidden"
-    );
-
-
-    if (state === "countdown") {
-
-        countdownPage.classList.remove(
-            "hidden"
-        );
-
-    }
-
-
-    else if (state === "birthday") {
-
-        birthdayPage.classList.remove(
-            "hidden"
-        );
-
-        startBirthdayCelebration();
+        createBalloons();
+        createGarland();
+        createConfetti();
 
         loadWishes();
-
-    }
-
-
-    else {
-
-        afterPage.classList.remove(
-            "hidden"
-        );
+        subscribeToRealtimeWishes();
 
     }
 
 }
 
 
-/* =====================================================
+/* =========================================================
    COUNTDOWN
-===================================================== */
+   ========================================================= */
 
-let previousCountdown = {
-    days: null,
-    hours: null,
-    minutes: null,
-    seconds: null
+let previousValues = {
+    days: "",
+    hours: "",
+    minutes: "",
+    seconds: ""
 };
+
+
+function animateNumber(element, value, key) {
+
+    if (previousValues[key] === value) {
+        return;
+    }
+
+    previousValues[key] =
+        value;
+
+    element.textContent =
+        value;
+
+    element.classList.remove(
+        "flip-animation"
+    );
+
+    void element.offsetWidth;
+
+    element.classList.add(
+        "flip-animation"
+    );
+}
 
 
 function updateCountdown() {
 
-    if (
-        getPageState() !==
-        "countdown"
-    ) {
-        return;
-    }
-
-
     const {
+        now,
         birthdayStart
     } = getBirthdayDates();
 
-
-    const now =
-        new Date();
-
-
-    let difference =
+    const difference =
         birthdayStart.getTime() -
         now.getTime();
 
+    if (difference <= 0) {
 
-    if (difference < 0) {
-        difference = 0;
+        updatePageState();
+
+        return;
     }
-
 
     const totalSeconds =
         Math.floor(
             difference / 1000
         );
 
-
     const days =
         Math.floor(
             totalSeconds / 86400
         );
-
 
     const hours =
         Math.floor(
             (totalSeconds % 86400) / 3600
         );
 
-
     const minutes =
         Math.floor(
             (totalSeconds % 3600) / 60
         );
 
-
     const seconds =
         totalSeconds % 60;
 
 
-    updateFlip(
-        "days",
+    animateNumber(
+        daysElement,
         String(days).padStart(2, "0"),
-        days
+        "days"
     );
 
-
-    updateFlip(
-        "hours",
+    animateNumber(
+        hoursElement,
         String(hours).padStart(2, "0"),
-        hours
+        "hours"
     );
 
-
-    updateFlip(
-        "minutes",
+    animateNumber(
+        minutesElement,
         String(minutes).padStart(2, "0"),
-        minutes
+        "minutes"
     );
 
-
-    updateFlip(
-        "seconds",
+    animateNumber(
+        secondsElement,
         String(seconds).padStart(2, "0"),
-        seconds
+        "seconds"
     );
-}
-
-
-function updateFlip(
-    id,
-    value,
-    rawValue
-) {
-
-    const element =
-        document.getElementById(id);
-
-
-    if (!element) {
-        return;
-    }
-
-
-    const previous =
-        previousCountdown[id];
-
-
-    element.textContent =
-        value;
-
-
-    if (
-        previous !==
-        rawValue
-    ) {
-
-        element.classList.remove(
-            "animate"
-        );
-
-
-        void element.offsetWidth;
-
-
-        element.classList.add(
-            "animate"
-        );
-
-
-        previousCountdown[id] =
-            rawValue;
-    }
 
 }
 
 
-/* =====================================================
+/* =========================================================
    WISH MODAL
-===================================================== */
+   ========================================================= */
 
-function openWishModal() {
-
-    const state =
-        getPageState();
-
-
-    if (
-        state ===
-        "birthday"
-    ) {
-
-        modalSubtitle.textContent =
-            "All birthday wishes are now visible! Leave yours here ❤️";
-
-    }
-
-    else {
-
-        modalSubtitle.textContent =
-            "Your wish will be saved privately and revealed when the birthday begins at midnight on September 9. 🔒";
-
-    }
-
-
-    wishModal.classList.remove(
-        "hidden"
-    );
-
-
-    setTimeout(
-        () => wishName.focus(),
-        100
-    );
-}
-
-
-function closeWishModal() {
-
-    wishModal.classList.add(
-        "hidden"
-    );
-}
-
-
-wishesButton.addEventListener(
+wishButton.addEventListener(
     "click",
-    openWishModal
+    () => {
+
+        wishModal.classList.add(
+            "active"
+        );
+
+        setTimeout(
+            () => wishName.focus(),
+            100
+        );
+
+    }
 );
 
 
-closeModal.addEventListener(
+cancelWish.addEventListener(
     "click",
     closeWishModal
 );
@@ -1512,669 +1252,473 @@ wishModal.addEventListener(
     event => {
 
         if (
-            event.target ===
-            wishModal
+            event.target === wishModal
         ) {
-
             closeWishModal();
-
         }
 
     }
 );
 
 
-document.addEventListener(
-    "keydown",
-    event => {
+function closeWishModal() {
 
-        if (
-            event.key === "Escape" &&
-            !wishModal.classList.contains("hidden")
-        ) {
-
-            closeWishModal();
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   TOAST
-===================================================== */
-
-let toastTimer;
-
-
-function showToast(
-    message
-) {
-
-    toast.textContent =
-        message;
-
-
-    toast.classList.add(
-        "show"
+    wishModal.classList.remove(
+        "active"
     );
 
+    wishStatus.textContent = "";
 
-    clearTimeout(
-        toastTimer
-    );
-
-
-    toastTimer =
-        setTimeout(
-            () => {
-
-                toast.classList.remove(
-                    "show"
-                );
-
-            },
-            4000
-        );
 }
 
 
-/* =====================================================
-   SUBMIT WISH
-===================================================== */
+/* =========================================================
+   SAVE WISH
+   ========================================================= */
 
-let lastSubmissionTime =
-    0;
+let lastSubmitTime = 0;
 
 
 wishForm.addEventListener(
     "submit",
-    async event => {
-
-        event.preventDefault();
-
-
-        /* Anti-bot */
-
-        const honeypot =
-            document.getElementById(
-                "website"
-            ).value;
-
-
-        if (honeypot) {
-            return;
-        }
-
-
-        /* Rate limit */
-
-        const now =
-            Date.now();
-
-
-        if (
-            now -
-            lastSubmissionTime <
-            5000
-        ) {
-
-            showToast(
-                "Please wait a few seconds before sending another wish."
-            );
-
-            return;
-
-        }
-
-
-        const name =
-            wishName.value.trim();
-
-
-        const message =
-            wishMessage.value.trim();
-
-
-        if (
-            name.length < 1 ||
-            name.length > 40
-        ) {
-
-            showToast(
-                "Please enter a name up to 40 characters."
-            );
-
-            return;
-
-        }
-
-
-        if (
-            message.length < 1 ||
-            message.length > 500
-        ) {
-
-            showToast(
-                "Please keep your wish within 500 characters."
-            );
-
-            return;
-
-        }
-
-
-        lastSubmissionTime =
-            now;
-
-
-        submitWish.disabled =
-            true;
-
-
-        submitWish.textContent =
-            "Sending... 💌";
-
-
-        try {
-
-            const {
-                data,
-                error
-            } =
-            await supabaseClient
-                .from("birthday_wishes")
-                .insert({
-                    name: name,
-                    message: message
-                })
-                .select()
-                .single();
-
-
-            if (error) {
-                throw error;
-            }
-
-
-            wishForm.reset();
-
-
-            closeWishModal();
-
-
-            if (
-                getPageState() ===
-                "birthday"
-            ) {
-
-                /*
-                   Realtime will normally add it.
-                   We don't manually add it here
-                   to avoid duplicates.
-                */
-
-                showToast(
-                    "Your birthday wish is now on the wall! ❤️"
-                );
-
-            }
-
-            else {
-
-                showToast(
-                    "Wish saved privately! 🔒 It will appear when the birthday begins."
-                );
-
-            }
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Supabase error:",
-                error
-            );
-
-
-            showToast(
-                "Couldn't save the wish. Please try again."
-            );
-
-        }
-
-
-        finally {
-
-            submitWish.disabled =
-                false;
-
-
-            submitWish.textContent =
-                "Send Birthday Wish 💖";
-
-        }
-
-    }
+    submitWish
 );
 
 
-/* =====================================================
-   LOAD WISHES
-===================================================== */
+async function submitWish(event) {
 
-let wishesData = [];
+    event.preventDefault();
+
+    const now =
+        Date.now();
+
+    /*
+       Simple client-side cooldown.
+    */
+
+    if (
+        now - lastSubmitTime < 5000
+    ) {
+
+        wishStatus.textContent =
+            "Please wait a few seconds before submitting again.";
+
+        return;
+    }
+
+    /*
+       Honeypot protection.
+    */
+
+    const honeypot =
+        document.getElementById(
+            "website"
+        ).value.trim();
+
+    if (honeypot) {
+        return;
+    }
+
+
+    const name =
+        wishName.value.trim();
+
+    const message =
+        wishMessage.value.trim();
+
+
+    if (!name || !message) {
+
+        wishStatus.textContent =
+            "Please enter your name and message.";
+
+        return;
+    }
+
+
+    if (name.length > 40) {
+
+        wishStatus.textContent =
+            "Name must be 40 characters or less.";
+
+        return;
+    }
+
+
+    if (message.length > 500) {
+
+        wishStatus.textContent =
+            "Message must be 500 characters or less.";
+
+        return;
+    }
+
+
+    lastSubmitTime =
+        now;
+
+    submitWishButton.disabled =
+        true;
+
+    submitWishButton.textContent =
+        "Saving...";
+
+    wishStatus.textContent =
+        "Saving your wish...";
+
+
+    try {
+
+        console.log(
+            "Submitting wish to Supabase..."
+        );
+
+        console.log(
+            "Supabase URL:",
+            SUPABASE_URL
+        );
+
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("birthday_wishes")
+            .insert({
+                name: name,
+                message: message
+            })
+            .select();
+
+
+        /*
+           IMPORTANT:
+           Show the REAL Supabase error.
+        */
+
+        if (error) {
+
+            console.error(
+                "SUPABASE ERROR:",
+                error
+            );
+
+            wishStatus.innerHTML =
+                "Database error. Check the browser console.";
+
+            alert(
+                "Couldn’t save the wish.\n\n" +
+                "Code: " +
+                (error.code || "N/A") +
+                "\n\nMessage: " +
+                (error.message || "Unknown error") +
+                "\n\nDetails: " +
+                (error.details || "N/A") +
+                "\n\nHint: " +
+                (error.hint || "N/A")
+            );
+
+            return;
+        }
+
+
+        console.log(
+            "Wish successfully saved:",
+            data
+        );
+
+
+        /*
+           If birthday has started, immediately display
+           the new wish.
+        */
+
+        if (
+            getPageState() === "birthday" &&
+            data &&
+            data.length
+        ) {
+
+            addWishToWall(
+                data[0],
+                true
+            );
+
+        }
+
+
+        if (
+            getPageState() === "birthday"
+        ) {
+
+            wishStatus.textContent =
+                "Your birthday wish is now on the wall! ❤️";
+
+        } else {
+
+            wishStatus.textContent =
+                "Wish saved privately! 🔒 It will appear when the birthday begins.";
+
+        }
+
+
+        wishForm.reset();
+
+
+        setTimeout(
+            () => {
+
+                closeWishModal();
+
+            },
+            1600
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "UNEXPECTED ERROR:",
+            error
+        );
+
+        alert(
+            "Couldn’t save the wish.\n\n" +
+            "Unexpected error:\n" +
+            error.message
+        );
+
+    } finally {
+
+        submitWishButton.disabled =
+            false;
+
+        submitWishButton.textContent =
+            "Send Wish ❤️";
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD WISHES
+
+   IMPORTANT:
+   Before birthday this function is NEVER called.
+   Therefore the website does not query wishes before
+   September 9.
+   ========================================================= */
+
+let wishesLoaded =
+    false;
 
 
 async function loadWishes() {
 
-    /*
-       VERY IMPORTANT:
-
-       Before birthday, we don't even ask
-       Supabase for the wishes.
-    */
-
-    if (
-        getPageState() !==
-        "birthday"
-    ) {
-
+    if (getPageState() !== "birthday") {
         return;
-
     }
 
+    if (wishesLoaded) {
+        return;
+    }
 
-    wishesWall.innerHTML = `
-        <div class="loading-wishes">
-            Loading all birthday wishes... 💌
-        </div>
-    `;
+    wishesLoaded =
+        true;
 
 
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .from("birthday_wishes")
-        .select(
-            "id,name,message,created_at"
-        )
-        .order(
-            "created_at",
-            {
-                ascending: false
+    try {
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("birthday_wishes")
+            .select(
+                "id,name,message,created_at"
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            )
+            .limit(500);
+
+
+        if (error) {
+
+            console.error(
+                "Error loading wishes:",
+                error
+            );
+
+            wishesGrid.innerHTML =
+                '<div class="empty-wishes">' +
+                'Unable to load wishes right now.' +
+                '</div>';
+
+            return;
+        }
+
+
+        wishesGrid.innerHTML =
+            "";
+
+
+        if (
+            !data ||
+            data.length === 0
+        ) {
+
+            wishesGrid.innerHTML =
+                '<div class="empty-wishes">' +
+                'Be the first to send a birthday wish! 💌' +
+                '</div>';
+
+            return;
+        }
+
+
+        data.forEach(
+            wish => {
+
+                addWishToWall(
+                    wish,
+                    false
+                );
+
             }
-        )
-        .limit(500);
+        );
 
 
-    if (error) {
+    } catch (error) {
 
         console.error(
-            "Loading wishes failed:",
+            "Unexpected loading error:",
             error
         );
 
-
-        wishesWall.innerHTML = `
-            <div class="no-wishes">
-                Unable to load wishes right now.
-            </div>
-        `;
-
-
-        wishCount.textContent =
-            "Unable to load wishes";
-
-
-        return;
-
     }
-
-
-    wishesData =
-        data || [];
-
-
-    renderWishes();
 
 }
 
 
-/* =====================================================
-   RENDER WISHES
-===================================================== */
+/* =========================================================
+   ADD WISH TO WALL
+   ========================================================= */
 
-function renderWishes() {
-
-    wishesWall.innerHTML = "";
-
-
-    if (
-        wishesData.length ===
-        0
-    ) {
-
-        wishesWall.innerHTML = `
-            <div class="no-wishes">
-                No wishes yet.<br>
-                Be the first to leave a birthday wish! ❤️
-            </div>
-        `;
-
-
-        wishCount.textContent =
-            "0 wishes";
-
-
-        return;
-
-    }
-
-
-    wishesData.forEach(
-        wish => {
-
-            createWishCard(
-                wish
-            );
-
-        }
-    );
-
-
-    updateWishCount();
-
-}
-
-
-/* =====================================================
-   CREATE WISH CARD
-===================================================== */
-
-function createWishCard(
-    wish
+function addWishToWall(
+    wish,
+    putAtTop
 ) {
 
-    const card =
-        document.createElement(
-            "article"
-        );
-
-
-    card.className =
-        "wish-card";
-
-
-    card.dataset.id =
-        wish.id;
-
-
-    const name =
-        document.createElement(
-            "div"
-        );
-
-
-    name.className =
-        "wish-name";
-
-
-    name.textContent =
-        wish.name;
-
-
-    const message =
-        document.createElement(
-            "div"
-        );
-
-
-    message.className =
-        "wish-message";
-
-
-    /*
-       textContent is deliberately used instead
-       of innerHTML to prevent HTML injection.
-    */
-
-    message.textContent =
-        wish.message;
-
-
-    const time =
-        document.createElement(
-            "div"
-        );
-
-
-    time.className =
-        "wish-time";
-
-
-    time.textContent =
-        formatDate(
-            wish.created_at
-        );
-
-
-    card.appendChild(
-        name
-    );
-
-
-    card.appendChild(
-        message
-    );
-
-
-    card.appendChild(
-        time
-    );
-
-
-    wishesWall.appendChild(
-        card
-    );
-
-}
-
-
-/* =====================================================
-   ADD REALTIME WISH
-===================================================== */
-
-function addRealtimeWish(
-    wish
-) {
-
-    /*
-       Never show realtime wishes before
-       the birthday starts.
-    */
-
-    if (
-        getPageState() !==
-        "birthday"
-    ) {
-
+    if (!wish) {
         return;
-
     }
 
 
     /*
-       Prevent duplicates.
+       Prevent duplicate cards.
     */
 
     if (
-        wishesData.some(
-            item =>
-                item.id === wish.id
+        document.querySelector(
+            `[data-wish-id="${wish.id}"]`
         )
     ) {
-
         return;
-
     }
-
-
-    wishesData.unshift(
-        wish
-    );
 
 
     const card =
         document.createElement(
-            "article"
+            "div"
         );
-
 
     card.className =
         "wish-card";
 
-
-    card.dataset.id =
+    card.dataset.wishId =
         wish.id;
 
 
-    const name =
+    const nameElement =
         document.createElement(
             "div"
         );
 
-
-    name.className =
+    nameElement.className =
         "wish-name";
 
+    /*
+       textContent prevents HTML injection.
+    */
 
-    name.textContent =
-        wish.name;
+    nameElement.textContent =
+        "❤️ " + wish.name;
 
 
-    const message =
+    const messageElement =
         document.createElement(
             "div"
         );
 
-
-    message.className =
+    messageElement.className =
         "wish-message";
 
-
-    message.textContent =
+    messageElement.textContent =
         wish.message;
 
 
-    const time =
-        document.createElement(
-            "div"
-        );
-
-
-    time.className =
-        "wish-time";
-
-
-    time.textContent =
-        formatDate(
-            wish.created_at
-        );
-
+    card.appendChild(
+        nameElement
+    );
 
     card.appendChild(
-        name
+        messageElement
     );
 
 
-    card.appendChild(
-        message
-    );
+    if (putAtTop) {
 
-
-    card.appendChild(
-        time
-    );
-
-
-    const emptyMessage =
-        wishesWall.querySelector(
-            ".no-wishes"
+        wishesGrid.prepend(
+            card
         );
 
+    } else {
 
-    if (emptyMessage) {
-
-        wishesWall.innerHTML =
-            "";
+        wishesGrid.appendChild(
+            card
+        );
 
     }
 
-
-    wishesWall.prepend(
-        card
-    );
-
-
-    updateWishCount();
-
 }
 
 
-/* =====================================================
-   COUNT
-===================================================== */
+/* =========================================================
+   REALTIME WISHES
+   ========================================================= */
 
-function updateWishCount() {
-
-    const count =
-        wishesData.length;
+let realtimeStarted =
+    false;
 
 
-    wishCount.textContent =
-        `${count} ${count === 1 ? "wish" : "wishes"} ❤️`;
+function subscribeToRealtimeWishes() {
 
-}
+    if (realtimeStarted) {
+        return;
+    }
 
+    if (getPageState() !== "birthday") {
+        return;
+    }
 
-/* =====================================================
-   DATE FORMAT
-===================================================== */
+    realtimeStarted =
+        true;
 
-function formatDate(
-    dateString
-) {
-
-    const date =
-        new Date(
-            dateString
-        );
-
-
-    return date.toLocaleString(
-        undefined,
-        {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-            hour: "numeric",
-            minute: "2-digit"
-        }
-    );
-
-}
-
-
-/* =====================================================
-   SUPABASE REALTIME
-===================================================== */
-
-function setupRealtime() {
 
     supabaseClient
         .channel(
@@ -2189,140 +1733,109 @@ function setupRealtime() {
             },
             payload => {
 
-                addRealtimeWish(
+                console.log(
+                    "New realtime wish:",
                     payload.new
+                );
+
+                addWishToWall(
+                    payload.new,
+                    true
                 );
 
             }
         )
-        .subscribe();
+        .subscribe(
+            status => {
+
+                console.log(
+                    "Realtime status:",
+                    status
+                );
+
+            }
+        );
 
 }
 
 
-/* =====================================================
-   BIRTHDAY CELEBRATION
-===================================================== */
-
-let celebrationStarted =
-    false;
-
-
-function startBirthdayCelebration() {
-
-    if (
-        celebrationStarted
-    ) {
-
-        return;
-
-    }
-
-
-    celebrationStarted =
-        true;
-
-
-    createBalloons();
-
-
-    createConfetti();
-
-
-    setTimeout(
-        createConfetti,
-        1500
-    );
-
-
-    setTimeout(
-        createConfetti,
-        3000
-    );
-
-
-    setTimeout(
-        createConfetti,
-        5000
-    );
-
-}
-
-
-/* =====================================================
+/* =========================================================
    BALLOONS
-===================================================== */
+   ========================================================= */
 
 function createBalloons() {
 
+    const container =
+        document.getElementById(
+            "balloons"
+        );
+
+    if (
+        container.children.length > 0
+    ) {
+        return;
+    }
+
+
     for (
         let i = 0;
-        i < 30;
+        i < 28;
         i++
     ) {
 
-        setTimeout(
-            () => {
+        const balloon =
+            document.createElement(
+                "div"
+            );
 
-                const balloon =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                balloon.className =
-                    "balloon";
+        balloon.className =
+            "balloon";
 
 
-                balloon.style.left =
-                    Math.random() * 100 +
-                    "%";
+        const colors = [
+            "#ff4fa3",
+            "#55e9ff",
+            "#ffe45c",
+            "#9d6bff",
+            "#ff704d",
+            "#6cff9b"
+        ];
+
+        const color =
+            colors[
+                Math.floor(
+                    Math.random() *
+                    colors.length
+                )
+            ];
 
 
-                balloon.style.animationDuration =
-                    (
-                        8 +
-                        Math.random() * 7
-                    ) +
-                    "s";
+        balloon.style.background =
+            color;
+
+        balloon.style.color =
+            color;
+
+        balloon.style.left =
+            Math.random() * 100 +
+            "%";
+
+        balloon.style.animationDuration =
+            (8 + Math.random() * 10) +
+            "s";
+
+        balloon.style.animationDelay =
+            Math.random() * 8 +
+            "s";
+
+        balloon.style.transform =
+            "scale(" +
+            (0.6 + Math.random() * .7) +
+            ")";
 
 
-                balloon.style.width =
-                    (
-                        35 +
-                        Math.random() * 25
-                    ) +
-                    "px";
-
-
-                balloon.style.height =
-                    (
-                        48 +
-                        Math.random() * 30
-                    ) +
-                    "px";
-
-
-                balloon.style.background =
-                    `hsl(${Math.random() * 360}, 90%, 65%)`;
-
-
-                document.body.appendChild(
-                    balloon
-                );
-
-
-                setTimeout(
-                    () => {
-
-                        balloon.remove();
-
-                    },
-                    16000
-                );
-
-            },
-            i * 150
+        container.appendChild(
+            balloon
         );
 
     }
@@ -2330,11 +1843,74 @@ function createBalloons() {
 }
 
 
-/* =====================================================
+/* =========================================================
+   GARLAND
+   ========================================================= */
+
+function createGarland() {
+
+    const garland =
+        document.getElementById(
+            "garland"
+        );
+
+    if (
+        garland.children.length > 0
+    ) {
+        return;
+    }
+
+
+    for (
+        let i = 0;
+        i < 45;
+        i++
+    ) {
+
+        const flag =
+            document.createElement(
+                "span"
+            );
+
+        const colors = [
+            "#ff4fa3",
+            "#55e9ff",
+            "#ffe45c",
+            "#9d6bff",
+            "#ff704d"
+        ];
+
+        flag.style.background =
+            colors[
+                i % colors.length
+            ];
+
+        garland.appendChild(
+            flag
+        );
+
+    }
+
+}
+
+
+/* =========================================================
    CONFETTI
-===================================================== */
+   ========================================================= */
 
 function createConfetti() {
+
+    const container =
+        document.getElementById(
+            "confetti"
+        );
+
+    if (
+        container.children.length > 0
+    ) {
+        return;
+    }
+
 
     for (
         let i = 0;
@@ -2342,56 +1918,55 @@ function createConfetti() {
         i++
     ) {
 
-        setTimeout(
-            () => {
+        const piece =
+            document.createElement(
+                "div"
+            );
 
-                const piece =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                piece.className =
-                    "confetti";
+        piece.className =
+            "confetti";
 
 
-                piece.style.left =
-                    Math.random() * 100 +
-                    "%";
+        const colors = [
+            "#ff4fa3",
+            "#55e9ff",
+            "#ffe45c",
+            "#9d6bff",
+            "#6cff9b"
+        ];
+
+        piece.style.background =
+            colors[
+                Math.floor(
+                    Math.random() *
+                    colors.length
+                )
+            ];
 
 
-                piece.style.animationDuration =
-                    (
-                        3 +
-                        Math.random() * 4
-                    ) +
-                    "s";
+        piece.style.left =
+            Math.random() * 100 +
+            "%";
 
 
-                piece.style.background =
-                    `hsl(${Math.random() * 360}, 95%, 65%)`;
+        piece.style.animationDuration =
+            (3 + Math.random() * 6) +
+            "s";
 
 
-                piece.style.transform =
-                    `rotate(${Math.random() * 360}deg)`;
+        piece.style.animationDelay =
+            Math.random() * 5 +
+            "s";
 
 
-                document.body.appendChild(
-                    piece
-                );
+        piece.style.transform =
+            "rotate(" +
+            Math.random() * 360 +
+            "deg)";
 
 
-                setTimeout(
-                    () => {
-
-                        piece.remove();
-
-                    },
-                    8000
-                );
-
-            },
-            i * 15
+        container.appendChild(
+            piece
         );
 
     }
@@ -2399,38 +1974,59 @@ function createConfetti() {
 }
 
 
-/* =====================================================
-   MAIN LOOP
-===================================================== */
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
 
-function mainLoop() {
+updatePageState();
 
-    updatePageState();
-
-    updateCountdown();
-
-}
-
-
-mainLoop();
+updateCountdown();
 
 
 /*
-   250ms check means the website changes
-   almost immediately at midnight.
+   Countdown updates every second.
 */
 
 setInterval(
-    mainLoop,
-    250
+    () => {
+
+        updateCountdown();
+
+        const state =
+            getPageState();
+
+        /*
+           If midnight has just been crossed,
+           update the page.
+        */
+
+        if (
+            state === "birthday"
+        ) {
+
+            updatePageState();
+
+        }
+
+    },
+    1000
 );
 
 
-/* =====================================================
-   REALTIME CONNECTION
-===================================================== */
+/*
+   Also check the date every 10 seconds.
+   This makes the transition robust even if the browser
+   has been running for a long time.
+*/
 
-setupRealtime();
+setInterval(
+    () => {
+
+        updatePageState();
+
+    },
+    10000
+);
 
 </script>
 
