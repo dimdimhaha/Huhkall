@@ -7,27 +7,24 @@ export default async function handler(req, res) {
     const { message } = req.body;
 
     if (!message) {
-      return res.status(400).json({ error: "Message is required" });
+      return res.status(400).json({
+        error: "Message is required"
+      });
     }
 
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+      "https://generativelanguage.googleapis.com/v1beta/interactions",
       {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
           "x-goog-api-key": process.env.GEMINI_API_KEY
         },
+
         body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: message
-                }
-              ]
-            }
-          ]
+          model: "gemini-3.6-flash",
+          input: message
         })
       }
     );
@@ -40,17 +37,17 @@ export default async function handler(req, res) {
       });
     }
 
-    const reply =
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "No response received.";
-
-    return res.status(200).json({ reply });
+    return res.status(200).json({
+      reply: data.output_text || "No response received."
+    });
 
   } catch (error) {
+
     console.error(error);
 
     return res.status(500).json({
-      error: "Something went wrong while contacting the AI."
+      error: error.message || "Something went wrong."
     });
+
   }
 }
