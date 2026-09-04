@@ -6,75 +6,205 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message } = req.body || {};
+    const { messages } = req.body || {};
 
-    if (!message || !message.trim()) {
+    if (!Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({
-        error: "Message is required"
+        error: "Messages are required"
       });
     }
 
+    // Keep only recent messages to reduce request size and latency
+    const recentMessages = messages.slice(-12);
+
+    const contents = recentMessages.map((msg) => ({
+      role: msg.role === "assistant" ? "model" : "user",
+      parts: [
+        {
+          text: String(msg.content || "")
+        }
+      ]
+    }));
+
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:streamGenerateContent?alt=sse",
       {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": process.env.GEMINI_API_KEY
+          "x-goog-api-key": process.env.GEMINI_API_KEY,
+          "Accept": "text/event-stream"
         },
+
         body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: message
-                }
-              ]
-            }
-          ]
+          contents,
+
+          generationConfig: {
+            temperature: 0.4,
+            maxOutputTokens: 2048
+          }
         })
       }
     );
 
-    const data = await response.json();
-
     if (!response.ok) {
-      console.error("Gemini API error:", data);
+      const errorText = await response.text();
+
+      console.error("Gemini API error:", errorText);
+
+      let errorMessage = "Gemini API request failed.";
+
+      try {
+        const errorData = JSON.parse(errorText);
+
+        errorMessage =
+          errorData?.error?.message ||
+          errorMessage;
+
+      } catch {
+        // Response wasn't JSON
+      }
 
       return res.status(response.status).json({
-        error:
-          data?.error?.message ||
-          "Gemini API request failed"
+        error: errorMessage
       });
     }
 
-    const reply =
-      data?.candidates?.[0]?.content?.parts
-        ?.map(part => part.text || "")
-        .join("")
-        .trim();
-
-    if (!reply) {
-      console.error("Unexpected Gemini response:", data);
-
-      return res.status(502).json({
-        error: "Gemini returned an empty response."
+    if (!response.body) {
+      return res.status(500).json({
+        error: "Gemini did not return a stream."
       });
     }
 
-    return res.status(200).json({
-      reply
-    });
+    // SSE headers
+    res.setHeader(
+      "Content-Type",
+      "text/event-stream; charset=utf-8"
+    );
+
+    res.setHeader(
+      "Cache-Control",
+      "no-cache, no-transform"
+    );
+
+    res.setHeader(
+      "Connection",
+      "keep-alive"
+    );
+
+    // Helpful for some hosting/proxy environments
+    res.setHeader(
+      "X-Accel-Buffering",
+      "no"
+    );
+
+    const reader = response.body.getReader();
+
+    const decoder = new TextDecoder();
+
+    let buffer = "";
+
+    while (true) {
+      const { value, done } = await reader.read();
+
+      if (done) {
+        break;
+      }
+
+      buffer += decoder.decode(value, {
+        stream: true
+      });
+
+      const events = buffer.split("\n\n");
+
+      buffer = events.pop() || "";
+
+      for (const event of events) {
+
+        const lines = event.split("\n");
+
+        for (const line of lines) {
+
+          if (!line.startsWith("data:")) {
+            continue;
+          }
+
+          const jsonText =
+            line.slice(5).trim();
+
+          if (!jsonText) {
+            continue;
+          }
+
+          try {
+
+            const data =
+              JSON.parse(jsonText);
+
+            const parts =
+              data?.candidates?.[0]
+                ?.content?.parts || [];
+
+            for (const part of parts) {
+
+              if (part.text) {
+
+                res.write(
+                  `data: ${JSON.stringify({
+                    text: part.text
+                  })}\n\n`
+                );
+
+              }
+
+            }
+
+          } catch (error) {
+
+            console.error(
+              "Stream parsing error:",
+              error
+            );
+
+          }
+        }
+      }
+    }
+
+    res.write(
+      `data: ${JSON.stringify({
+        done: true
+      })}\n\n`
+    );
+
+    res.end();
 
   } catch (error) {
 
-    console.error("Server error:", error);
+    console.error(
+      "Server error:",
+      error
+    );
 
-    return res.status(500).json({
-      error:
-        error?.message ||
-        "Something went wrong while contacting Gemini."
-    });
+    if (!res.headersSent) {
+
+      return res.status(500).json({
+        error:
+          error?.message ||
+          "Something went wrong."
+      });
+
+    }
+
+    res.write(
+      `data: ${JSON.stringify({
+        error:
+          error?.message ||
+          "Something went wrong."
+      })}\n\n`
+    );
+
+    res.end();
   }
 }
