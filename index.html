@@ -3,537 +3,776 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My AI</title>
-
+  <title>FinAI - Your Finance AI Assistant</title>
   <style>
     * {
       box-sizing: border-box;
-    }
-
-    body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f7f7f8;
+      padding: 0;
+    }
+    :root {
+      --bg: #f6f7fb;
+      --sidebar: #ffffff;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #718096;
+      --border: #e5e7eb;
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+      --user: #2563eb;
+      --ai: #ffffff;
+      --input: #ffffff;
+    }
+    body.dark {
+      --bg: #0f172a;
+      --sidebar: #111827;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+      --accent: #3b82f6;
+      --accent-dark: #2563eb;
+      --user: #2563eb;
+      --ai: #1e293b;
+      --input: #1e293b;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
       height: 100vh;
+      overflow: hidden;
+    }
+    /* APP */
+    .app {
+      display: flex;
+      height: 100vh;
+      width: 100%;
+    }
+    /* SIDEBAR */
+    .sidebar {
+      width: 270px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
+      padding: 18px;
+      transition: 0.25s;
     }
-
-    header {
-      background: white;
-      border-bottom: 1px solid #ddd;
-      padding: 16px 20px;
-      font-size: 20px;
-      font-weight: bold;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 25px;
     }
-
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 5px 15px rgba(37, 99, 235, 0.25);
+    }
+    .brand-name {
+      font-size: 21px;
+      font-weight: 750;
+    }
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .new-chat {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 25px;
+      text-align: left;
+    }
+    .new-chat:hover {
+      background: var(--bg);
+    }
+    .section-title {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-bottom: 10px;
+    }
+    .recent {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .recent-item {
+      padding: 10px 12px;
+      border-radius: 9px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .recent-item:hover {
+      background: var(--bg);
+      color: var(--text);
+    }
+    .sidebar-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 15px;
+    }
+    .theme-button {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      text-align: left;
+      cursor: pointer;
+      border-radius: 9px;
+    }
+    .theme-button:hover {
+      background: var(--bg);
+      color: var(--text);
+    }
+    /* MAIN */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .topbar {
+      height: 65px;
+      background: var(--sidebar);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 25px;
+    }
+    .mobile-menu {
+      display: none;
+      border: none;
+      background: transparent;
+      font-size: 23px;
+      cursor: pointer;
+      color: var(--text);
+      margin-right: 10px;
+    }
+    .top-title {
+      font-size: 16px;
+      font-weight: 650;
+    }
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background: #22c55e;
+      border-radius: 50%;
+    }
+    /* CHAT */
     #chat {
       flex: 1;
       overflow-y: auto;
-      padding: 25px;
+      padding: 35px 20px 120px;
     }
-
-    .message {
-      max-width: 800px;
-      margin: 12px auto;
-      padding: 14px 18px;
-      border-radius: 12px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-    }
-
-    .user {
-      background: #e8f0fe;
-    }
-
-    .ai {
-      background: white;
-      border: 1px solid #ddd;
-    }
-
     .welcome {
+      max-width: 850px;
+      margin: 9vh auto 0;
       text-align: center;
-      margin-top: 20vh;
     }
-
-    .welcome h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
-    }
-
-    .welcome p {
-      color: #666;
-    }
-
-    .input-area {
-      background: white;
-      border-top: 1px solid #ddd;
-      padding: 15px;
-      display: flex;
-      gap: 10px;
-    }
-
-    input {
-      flex: 1;
-      padding: 14px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 16px;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: #777;
-    }
-
-    button {
-      padding: 14px 20px;
-      border: none;
-      border-radius: 10px;
-      background: #111;
+    .welcome-logo {
+      width: 72px;
+      height: 72px;
+      margin: auto;
+      border-radius: 22px;
+      background: var(--accent);
       color: white;
-      font-size: 16px;
-      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 29px;
+      font-weight: 800;
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+      margin-bottom: 25px;
     }
-
-    button:disabled {
+    .welcome h1 {
+      font-size: 38px;
+      margin-bottom: 12px;
+      letter-spacing: -1px;
+    }
+    .welcome p {
+      color: var(--muted);
+      font-size: 16px;
+      margin-bottom: 35px;
+    }
+    .suggestions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      max-width: 650px;
+      margin: auto;
+    }
+    .suggestion {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 13px;
+      text-align: left;
+      cursor: pointer;
+      color: var(--text);
+      transition: 0.2s;
+    }
+    .suggestion:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .suggestion-title {
+      font-weight: 650;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    .suggestion-text {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    /* MESSAGES */
+    .message-row {
+      max-width: 850px;
+      margin: 0 auto 22px;
+      display: flex;
+      gap: 12px;
+    }
+    .avatar {
+      min-width: 34px;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .user-avatar {
+      background: var(--accent);
+      color: white;
+    }
+    .ai-avatar {
+      background: #0f172a;
+      color: white;
+    }
+    body.dark .ai-avatar {
+      background: #475569;
+    }
+    .message-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .message-name {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .message-text {
+      background: var(--ai);
+      border: 1px solid var(--border);
+      border-radius: 4px 13px 13px 13px;
+      padding: 14px 16px;
+      line-height: 1.6;
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .user-row .message-text {
+      background: var(--user);
+      color: white;
+      border: none;
+      border-radius: 13px 4px 13px 13px;
+    }
+    .copy-button {
+      margin-top: 7px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .copy-button:hover {
+      color: var(--text);
+    }
+    /* INPUT */
+    .input-wrapper {
+      position: fixed;
+      bottom: 0;
+      left: 270px;
+      right: 0;
+      padding: 15px 20px 20px;
+      background: linear-gradient(
+        transparent,
+        var(--bg) 25%
+      );
+    }
+    .input-area {
+      max-width: 850px;
+      margin: auto;
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      display: flex;
+      align-items: flex-end;
+      padding: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    #message {
+      flex: 1;
+      border: none;
+      outline: none;
+      resize: none;
+      background: transparent;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      padding: 11px 12px;
+      min-height: 43px;
+      max-height: 130px;
+    }
+    #message::placeholder {
+      color: var(--muted);
+    }
+    #sendButton {
+      width: 43px;
+      height: 43px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    #sendButton:hover {
+      background: var(--accent-dark);
+    }
+    #sendButton:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
-
-    @media (max-width: 600px) {
-      .message {
-        max-width: 95%;
+    .disclaimer {
+      max-width: 850px;
+      margin: 7px auto 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 10px;
+    }
+    /* MOBILE */
+    @media (max-width: 750px) {
+      .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        bottom: 0;
+        z-index: 100;
+        box-shadow: 10px 0 30px rgba(0,0,0,0.15);
       }
-
+      .sidebar.open {
+        left: 0;
+      }
+      .mobile-menu {
+        display: block;
+      }
+      .input-wrapper {
+        left: 0;
+      }
+      .topbar {
+        padding: 0 15px;
+      }
+      #chat {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      .welcome {
+        margin-top: 8vh;
+      }
       .welcome h1 {
-        font-size: 26px;
+        font-size: 29px;
       }
-
-      .input-area {
-        padding: 10px;
+      .suggestions {
+        grid-template-columns: 1fr;
+      }
+      .message-row {
+        gap: 8px;
       }
     }
   </style>
 </head>
-
 <body>
-
-  <header>
-    My AI
-  </header>
-
-  <div id="chat">
-
-    <div class="welcome" id="welcome">
-      <h1>How can I help you?</h1>
-      <p>Your personal AI assistant</p>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">F</div>
+      <div>
+        <div class="brand-name">FinAI</div>
+        <div class="brand-subtitle">Intelligent Finance Assistant</div>
+      </div>
     </div>
-
-  </div>
-
-  <div class="input-area">
-
-    <input
-      id="message"
-      type="text"
-      placeholder="Ask anything..."
-      autocomplete="off"
-    >
-
-    <button id="sendButton" onclick="sendMessage()">
-      Send
+    <button class="new-chat" onclick="newChat()">
+      ＋ &nbsp; New Chat
     </button>
-
-  </div>
-
-  <script>
-
-    const input = document.getElementById("message");
-    const sendButton = document.getElementById("sendButton");
-
-    input.addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {
-        sendMessage();
-      }
-    });
-
-
-    async function sendMessage() {
-
-      const chat = document.getElementById("chat");
-      const welcome = document.getElementById("welcome");
-
-      const text = input.value.trim();
-
-      if (!text) {
-        return;
-      }
-
-      if (welcome) {
-        welcome.remove();
-      }
-
-
-      // Show user's message
-
-      const userMessage = document.createElement("div");
-
-      userMessage.className = "message user";
-
-      userMessage.innerText = text;
-
-      chat.appendChild(userMessage);
-
-
-      // Clear input
-
-      input.value = "";
-
-      sendButton.disabled = true;
-
-      sendButton.innerText = "Thinking...";
-
-
-      // Show AI loading message
-
-      const aiMessage = document.createElement("div");
-
-      aiMessage.className = "message ai";
-
-      aiMessage.innerText = "Thinking...";
-
-      chat.appendChild(aiMessage);
-
-      chat.scrollTop = chat.scrollHeight;
-
-
-      try {
-
-        const response = await fetch("/api/chat", {
-
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            message: text
-          })
-
-        });
-
-
-        const data = await response.json();
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            data.error || "AI request failed"
-          );
-
-        }
-
-
-        // Display AI response
-
-        aiMessage.innerText =
-          data.reply || "No response received.";
-
-
-      } catch (error) {
-
-        console.error(error);
-
-        aiMessage.innerText =
-          "Sorry, something went wrong.\n\n" +
-          error.message;
-
-      }
-
-
-      sendButton.disabled = false;
-
-      sendButton.innerText = "Send";
-
-      input.focus();
-
-      chat.scrollTop = chat.scrollHeight;
-
-    }
-
-  </script>
-
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My AI</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f7f7f8;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      background: white;
-      border-bottom: 1px solid #ddd;
-      padding: 16px 20px;
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    #chat {
-      flex: 1;
-      overflow-y: auto;
-      padding: 25px;
-    }
-
-    .message {
-      max-width: 800px;
-      margin: 12px auto;
-      padding: 14px 18px;
-      border-radius: 12px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-    }
-
-    .user {
-      background: #e8f0fe;
-    }
-
-    .ai {
-      background: white;
-      border: 1px solid #ddd;
-    }
-
-    .welcome {
-      text-align: center;
-      margin-top: 20vh;
-    }
-
-    .welcome h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
-    }
-
-    .welcome p {
-      color: #666;
-    }
-
-    .input-area {
-      background: white;
-      border-top: 1px solid #ddd;
-      padding: 15px;
-      display: flex;
-      gap: 10px;
-    }
-
-    input {
-      flex: 1;
-      padding: 14px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 16px;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: #777;
-    }
-
-    button {
-      padding: 14px 20px;
-      border: none;
-      border-radius: 10px;
-      background: #111;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    @media (max-width: 600px) {
-      .message {
-        max-width: 95%;
-      }
-
-      .welcome h1 {
-        font-size: 26px;
-      }
-
-      .input-area {
-        padding: 10px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <header>
-    My AI
-  </header>
-
-  <div id="chat">
-
-    <div class="welcome" id="welcome">
-      <h1>How can I help you?</h1>
-      <p>Your personal AI assistant</p>
+    <div class="section-title">Recent Chats</div>
+    <div class="recent" id="recentChats">
+      <div class="recent-item">No recent conversations</div>
     </div>
-
-  </div>
-
+    <div class="sidebar-bottom">
+      <button class="theme-button" onclick="toggleTheme()">
+        ◐ &nbsp; Change appearance
+      </button>
+    </div>
+  </aside>
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;">
+        <button
+          class="mobile-menu"
+          onclick="toggleSidebar()"
+        >
+          ☰
+        </button>
+        <div class="top-title">
+          FinAI Assistant
+        </div>
+      </div>
+      <div class="status">
+        <span class="status-dot"></span>
+        AI Online
+      </div>
+    </div>
+    <!-- CHAT -->
+    <div id="chat">
+      <div class="welcome" id="welcome">
+        <div class="welcome-logo">
+          F
+        </div>
+        <h1>Welcome to FinAI</h1>
+        <p>
+          Your intelligent assistant for finance, contracts,
+          GST, audit and more.
+        </p>
+        <div class="suggestions">
+          <div
+            class="suggestion"
+            onclick="useSuggestion('Explain FIDIC Clause 13 in simple language.')"
+          >
+            <div class="suggestion-title">
+              📑 Contract Analysis
+            </div>
+            <div class="suggestion-text">
+              Explain FIDIC Clause 13 in simple language.
+            </div>
+          </div>
+          <div
+            class="suggestion"
+            onclick="useSuggestion('Explain the difference between GSTR-2A and GSTR-2B.')"
+          >
+            <div class="suggestion-title">
+              🧾 GST Assistance
+            </div>
+            <div class="suggestion-text">
+              Understand GST provisions and reconciliations.
+            </div>
+          </div>
+          <div
+            class="suggestion"
+            onclick="useSuggestion('Analyse this situation from an audit point of view.')"
+          >
+            <div class="suggestion-title">
+              🔍 Audit Analysis
+            </div>
+            <div class="suggestion-text">
+              Examine issues from an audit perspective.
+            </div>
+          </div>
+          <div
+            class="suggestion"
+            onclick="useSuggestion('Help me draft a professional finance note.')"
+          >
+            <div class="suggestion-title">
+              ✍️ Professional Drafting
+            </div>
+            <div class="suggestion-text">
+              Draft clear professional finance communications.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<!-- INPUT -->
+<div class="input-wrapper">
   <div class="input-area">
-
-    <input
+    <textarea
       id="message"
-      type="text"
-      placeholder="Ask anything..."
-      autocomplete="off"
+      placeholder="Ask FinAI anything..."
+      rows="1"
+    ></textarea>
+    <button
+      id="sendButton"
+      onclick="sendMessage()"
+      title="Send"
     >
-
-    <button id="sendButton" onclick="sendMessage()">
-      Send
+      ➤
     </button>
-
   </div>
-
-  <script>
-
-    const input = document.getElementById("message");
-    const sendButton = document.getElementById("sendButton");
-
-    input.addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {
-        sendMessage();
-      }
-    });
-
-
-    async function sendMessage() {
-
-      const chat = document.getElementById("chat");
-      const welcome = document.getElementById("welcome");
-
-      const text = input.value.trim();
-
-      if (!text) {
-        return;
-      }
-
-      if (welcome) {
-        welcome.remove();
-      }
-
-
-      // Show user's message
-
-      const userMessage = document.createElement("div");
-
-      userMessage.className = "message user";
-
-      userMessage.innerText = text;
-
-      chat.appendChild(userMessage);
-
-
-      // Clear input
-
-      input.value = "";
-
-      sendButton.disabled = true;
-
-      sendButton.innerText = "Thinking...";
-
-
-      // Show AI loading message
-
-      const aiMessage = document.createElement("div");
-
-      aiMessage.className = "message ai";
-
-      aiMessage.innerText = "Thinking...";
-
-      chat.appendChild(aiMessage);
-
-      chat.scrollTop = chat.scrollHeight;
-
-
-      try {
-
-        const response = await fetch("/api/chat", {
-
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            message: text
-          })
-
-        });
-
-
-        const data = await response.json();
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            data.error || "AI request failed"
-          );
-
-        }
-
-
-        // Display AI response
-
-        aiMessage.innerText =
-          data.reply || "No response received.";
-
-
-      } catch (error) {
-
-        console.error(error);
-
-        aiMessage.innerText =
-          "Sorry, something went wrong.\n\n" +
-          error.message;
-
-      }
-
-
-      sendButton.disabled = false;
-
-      sendButton.innerText = "Send";
-
-      input.focus();
-
-      chat.scrollTop = chat.scrollHeight;
-
+  <div class="disclaimer">
+    FinAI can make mistakes. Verify important financial, legal and contractual information.
+  </div>
+</div>
+<script>
+  const input = document.getElementById("message");
+  const sendButton = document.getElementById("sendButton");
+  const chat = document.getElementById("chat");
+  let conversations = [];
+  /* ENTER TO SEND */
+  input.addEventListener("keydown", function(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
     }
-
-  </script>
-
+  });
+  /* AUTO RESIZE */
+  input.addEventListener("input", function() {
+    this.style.height = "auto";
+    this.style.height =
+      Math.min(this.scrollHeight, 130) + "px";
+  });
+  /* SUGGESTION */
+  function useSuggestion(text) {
+    input.value = text;
+    input.focus();
+    sendMessage();
+  }
+  /* NEW CHAT */
+  function newChat() {
+    chat.innerHTML = `
+      <div class="welcome" id="welcome">
+        <div class="welcome-logo">F</div>
+        <h1>Welcome to FinAI</h1>
+        <p>
+          Your intelligent assistant for finance, contracts,
+          GST, audit and more.
+        </p>
+        <div class="suggestions">
+          <div class="suggestion"
+            onclick="useSuggestion('Explain FIDIC Clause 13 in simple language.')">
+            <div class="suggestion-title">
+              📑 Contract Analysis
+            </div>
+            <div class="suggestion-text">
+              Explain FIDIC Clause 13 in simple language.
+            </div>
+          </div>
+          <div class="suggestion"
+            onclick="useSuggestion('Explain the difference between GSTR-2A and GSTR-2B.')">
+            <div class="suggestion-title">
+              🧾 GST Assistance
+            </div>
+            <div class="suggestion-text">
+              Understand GST provisions and reconciliations.
+            </div>
+          </div>
+          <div class="suggestion"
+            onclick="useSuggestion('Analyse this situation from an audit point of view.')">
+            <div class="suggestion-title">
+              🔍 Audit Analysis
+            </div>
+            <div class="suggestion-text">
+              Examine issues from an audit perspective.
+            </div>
+          </div>
+          <div class="suggestion"
+            onclick="useSuggestion('Help me draft a professional finance note.')">
+            <div class="suggestion-title">
+              ✍️ Professional Drafting
+            </div>
+            <div class="suggestion-text">
+              Draft clear professional finance communications.
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    input.value = "";
+    input.style.height = "auto";
+  }
+  /* SEND MESSAGE */
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    const welcome = document.getElementById("welcome");
+    if (welcome) {
+      welcome.remove();
+    }
+    /* USER MESSAGE */
+    const userRow = document.createElement("div");
+    userRow.className =
+      "message-row user-row";
+    userRow.innerHTML = `
+      <div class="avatar user-avatar">
+        You
+      </div>
+      <div class="message-content">
+        <div class="message-name">
+          You
+        </div>
+        <div class="message-text">
+          ${escapeHtml(text)}
+        </div>
+      </div>
+    `;
+    chat.appendChild(userRow);
+    /* AI MESSAGE */
+    const aiRow = document.createElement("div");
+    aiRow.className =
+      "message-row";
+    aiRow.innerHTML = `
+      <div class="avatar ai-avatar">
+        F
+      </div>
+      <div class="message-content">
+        <div class="message-name">
+          FinAI
+        </div>
+        <div class="message-text" id="thinking">
+          Thinking...
+        </div>
+      </div>
+    `;
+    chat.appendChild(aiRow);
+    input.value = "";
+    input.style.height = "auto";
+    sendButton.disabled = true;
+    chat.scrollTop = chat.scrollHeight;
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: text
+        })
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(
+          data.error || "AI request failed"
+        );
+      }
+      const thinking =
+        document.getElementById("thinking");
+      thinking.innerText =
+        data.reply || "No response received.";
+      /* COPY BUTTON */
+      const copyButton =
+        document.createElement("button");
+      copyButton.className =
+        "copy-button";
+      copyButton.innerText =
+        "Copy response";
+      copyButton.onclick = function() {
+        navigator.clipboard.writeText(
+          thinking.innerText
+        );
+        copyButton.innerText =
+          "Copied ✓";
+        setTimeout(() => {
+          copyButton.innerText =
+            "Copy response";
+        }, 1500);
+      };
+      thinking.parentElement.appendChild(
+        copyButton
+      );
+      addRecentChat(text);
+    } catch (error) {
+      const thinking =
+        document.getElementById("thinking");
+      thinking.innerText =
+        "Sorry, something went wrong.\n\n" +
+        error.message;
+    }
+    sendButton.disabled = false;
+    input.focus();
+    chat.scrollTop = chat.scrollHeight;
+  }
+  /* RECENT CHATS */
+  function addRecentChat(text) {
+    const recent =
+      document.getElementById("recentChats");
+    if (
+      recent.innerText ===
+      "No recent conversations"
+    ) {
+      recent.innerHTML = "";
+    }
+    const item =
+      document.createElement("div");
+    item.className =
+      "recent-item";
+    item.innerText = text;
+    item.onclick = function() {
+      input.value = text;
+      input.focus();
+    };
+    recent.prepend(item);
+    if (recent.children.length > 10) {
+      recent.removeChild(
+        recent.lastChild
+      );
+    }
+  }
+  /* DARK MODE */
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+  }
+  /* MOBILE SIDEBAR */
+  function toggleSidebar() {
+    document
+      .getElementById("sidebar")
+      .classList.toggle("open");
+  }
+  /* SECURITY */
+  function escapeHtml(text) {
+    const div =
+      document.createElement("div");
+    div.innerText = text;
+    return div.innerHTML;
+  }
+</script>
 </body>
 </html>
